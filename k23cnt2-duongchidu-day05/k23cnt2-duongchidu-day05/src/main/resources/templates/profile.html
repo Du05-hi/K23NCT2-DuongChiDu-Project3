@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/_layout :: head(${title})"></head>
+<body>
+<header th:replace="fragments/_layout :: header"></header>
+
+<section class="container">
+    <div class="alert alert-info" th:each="info : ${DevmasterProfile}">
+        <h2 th:text="${info.name}"></h2>
+        <p>NickName: <span th:text="${info.nickName}"></span></p>
+        <p>Email: <span th:text="${info.email}"></span></p>
+        <p>Website: <span th:text="${info.website}"></span></p>
+    </div>
+</section>
+
+<footer th:replace="fragments/_layout :: footer"></footer>
+</body>
+</html>

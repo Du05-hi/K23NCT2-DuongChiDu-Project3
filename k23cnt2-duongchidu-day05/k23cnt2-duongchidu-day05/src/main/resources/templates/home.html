@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/_layout :: head(${title})"></head>
+<body>
+<header th:replace="fragments/_layout :: header"></header>
+
+<section class="container" style="min-height:268px">
+    <div class="row">
+        <h1>Đây là trang chủ</h1>
+        <p>Chào mừng đến với dự án Spring Boot - Thymeleaf (K23CNT2 Duong Chi Du)</p>
+    </div>
+    <nav th:insert="fragments/_layout :: menu"></nav>
+</section>
+
+<footer th:replace="fragments/_layout :: footer"></footer>
+</body>
+</html>
