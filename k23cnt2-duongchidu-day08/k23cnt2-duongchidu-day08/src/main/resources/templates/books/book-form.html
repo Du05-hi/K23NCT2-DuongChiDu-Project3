@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Book</title>
+</head>
+<body>
+
+<h2 th:text="${book.id != null ? 'Sửa sách' : 'Thêm sách'}"></h2>
+
+<form th:action="@{/books/new}" th:object="${book}" method="post"
+      enctype="multipart/form-data">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Tên sách:</label>
+    <input type="text" th:field="*{name}" required/><br/>
+
+    <label>Mã sách:</label>
+    <input type="text" th:field="*{code}" required/><br/>
+
+    <label>Giá:</label>
+    <input type="number" th:field="*{price}" step="0.01" required/><br/>
+
+    <label>Số lượng:</label>
+    <input type="number" th:field="*{quantity}" required/><br/>
+
+    <label>Mô tả:</label>
+    <textarea th:field="*{description}"></textarea><br/>
+
+    <label>Tác giả:</label><br/>
+    <select name="authorIds" multiple size="5">
+        <option th:each="a : ${authors}"
+                th:value="${a.id}"
+                th:text="${a.name}"
+                th:selected="${book.authors.contains(a)}">
+        </option>
+    </select><br/><br/>
+
+    <label>Ảnh sách:</label>
+    <input type="file" name="imageBook"/><br/>
+
+    <label>Hoạt động:</label>
+    <input type="checkbox" th:field="*{isActive}"/><br/><br/>
+
+    <button type="submit"
+            th:text="${book.id != null ? 'Cập nhật' : 'Thêm mới'}"></button>
+</form>
+
+<br/>
+<a href="/books">⬅ Quay lại</a>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book List</title>
+</head>
+<body>
+
+<h2>Danh sách sách</h2>
+
+<a href="/books/new">➕ Thêm sách</a>
+<br/><br/>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Mã</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Ảnh</th>
+        <th>Hoạt động</th>
+        <th>Tác giả</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="b : ${books}">
+        <td th:text="${b.id}"></td>
+        <td th:text="${b.name}"></td>
+        <td th:text="${b.code}"></td>
+        <td th:text="${b.price}"></td>
+        <td th:text="${b.quantity}"></td>
+
+        <td>
+            <img th:src="${b.imgUrl}" width="80"/>
+        </td>
+
+        <td th:text="${b.isActive}"></td>
+
+        <td>
+            <span th:each="x : ${b.authors}"
+                  th:text="${x.name + ' '}"></span>
+        </td>
+
+        <td>
+            <a th:href="@{'/books/edit/' + ${b.id}}">Sửa</a>
+            |
+            <a th:href="@{'/books/delete/' + ${b.id}}"
+               onclick="return confirm('Xóa sách?')">Xóa</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
