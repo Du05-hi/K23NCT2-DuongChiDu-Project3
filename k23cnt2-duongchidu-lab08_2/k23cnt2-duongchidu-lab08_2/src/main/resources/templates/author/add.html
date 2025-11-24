@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Thêm Tác giả</title>
+</head>
+<body>
+<section class="card shadow-sm p-4 bg-white">
+    <h3 class="fw-bold mb-3">Thêm mới Tác giả</h3>
+
+    <form action="/authors/save" method="post" th:object="${author}">
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <label class="form-label">Mã tác giả</label>
+                <input class="form-control" th:field="*{code}" placeholder="VD: AU001">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Tên tác giả</label>
+                <input class="form-control" th:field="*{name}" placeholder="Nhập tên tác giả">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input class="form-control" th:field="*{email}" placeholder="name@gmail.com">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input class="form-control" th:field="*{phone}" placeholder="0123456789">
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Địa chỉ</label>
+                <input class="form-control" th:field="*{address}" placeholder="Hà Nội / Sài Gòn ...">
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" th:field="*{isActive}">
+                    <label class="form-check-label">Còn hoạt động</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button class="btn btn-success">Lưu</button>
+            <a href="/authors" class="btn btn-secondary">Quay về</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>
