@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn hàng của tôi - CoffeeShop</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f3ede3;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            background-color: #4e342e !important;
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .order-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        }
+
+        .btn-coffee {
+            background-color: #6d4c41;
+            color: white;
+            font-weight: 600;
+        }
+        .btn-coffee:hover {
+            background-color: #5d4037;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+        .status-pending { color: #e65100; }
+        .status-completed { color: #2e7d32; }
+        .status-cancelled { color: #b71c1c; }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">CoffeeShop</a>
+        <div>
+            <a class="nav-link d-inline-block" href="/cart">🛒 Giỏ hàng</a>
+            <a class="nav-link d-inline-block" href="/login">🔐 Đăng nhập</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <h2>Lịch sử đơn hàng</h2>
+
+    <!-- NO ORDERS -->
+    <div class="alert alert-warning mt-3"
+         th:if="${orders == null or #lists.isEmpty(orders)}">
+        Bạn chưa có đơn hàng nào.
+        <a href="/">Mua hàng ngay</a>
+    </div>
+
+    <!-- ORDER LIST -->
+    <div class="order-card mt-3"
+         th:if="${orders != null and !#lists.isEmpty(orders)}">
+
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Mã đơn</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="o : ${orders}">
+                <td th:text="${o.id}"></td>
+                <td th:text="${#temporals.format(o.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td class="text-danger fw-bold" th:text="${o.total} + ' đ'"></td>
+
+                <td class="status"
+                    th:classappend="' status-' + ${o.status}">
+                    <span th:text="${o.status}"></span>
+                </td>
+
+                <td>
+                    <a th:href="@{/my-orders/{id}(id=${o.id})}"
+                       class="btn btn-coffee btn-sm">Xem chi tiết</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>

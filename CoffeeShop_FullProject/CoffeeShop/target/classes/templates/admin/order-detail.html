@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết đơn hàng | Admin CoffeeShop</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4eee3;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #3e2723;
+            padding-top: 30px;
+            position: fixed;
+            width: 220px;
+        }
+
+        .sidebar a {
+            color: #f8ede3;
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .sidebar a:hover {
+            background-color: #5d4037;
+            border-radius: 6px;
+        }
+
+        .header-bar {
+            background-color: #795548;
+            color: white;
+            padding: 15px 25px;
+            font-size: 22px;
+            font-weight: bold;
+            margin-left: 220px;
+        }
+
+        .content {
+            margin-left: 240px;
+            padding: 20px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .pending { background-color: #ffe082; }
+        .completed { background-color: #c5e1a5; }
+        .cancelled { background-color: #ef9a9a; }
+
+        .item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <a href="/admin/categories">📂 Quản lý danh mục</a>
+    <a href="/admin/products">🥤 Quản lý sản phẩm</a>
+    <a href="/admin/orders">📦 Quản lý đơn hàng</a>
+    <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
+</div>
+
+<div class="header-bar">
+    Chi tiết đơn hàng
+</div>
+
+<div class="content">
+
+    <div class="card shadow p-4">
+
+        <!-- THÔNG TIN ĐƠN HÀNG -->
+        <h4 class="mb-3">Thông tin chung</h4>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <strong>Mã đơn hàng:</strong>
+                <p th:text="${order.id}"></p>
+            </div>
+
+            <div class="col-md-4">
+                <strong>Khách hàng:</strong>
+                <p th:text="${order.customerName}"></p>
+            </div>
+
+            <div class="col-md-4">
+                <strong>Ngày tạo:</strong>
+                <p th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></p>
+            </div>
+
+            <div class="col-md-4">
+                <strong>Trạng thái:</strong>
+                <p>
+                    <span class="status-badge"
+                          th:classappend="${order.status} == 'Pending' ? ' pending' :
+                                          ${order.status} == 'Completed' ? ' completed' :
+                                          ' cancelled'"
+                          th:text="${order.status}">
+                    </span>
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <strong>Tổng tiền:</strong>
+                <p class="text-danger fw-bold" th:text="${order.total} + ' đ'"></p>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- SẢN PHẨM TRONG ĐƠN -->
+        <h4 class="mt-4 mb-3">Sản phẩm trong đơn</h4>
+
+        <table class="table table-bordered bg-white">
+            <thead class="table-secondary">
+            <tr>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tạm tính</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="i : ${orderItems}">
+                <td>
+                    <img th:src="${i.product.imageUrl}" class="item-img">
+                </td>
+
+                <td th:text="${i.product.name}"></td>
+
+                <td th:text="${i.product.price} + ' đ'"></td>
+
+                <td th:text="${i.quantity}"></td>
+
+                <td class="text-danger fw-bold"
+                    th:text="${i.product.price * i.quantity} + ' đ'"></td>
+            </tr>
+            </tbody>
+
+        </table>
+
+        <a href="/admin/orders" class="btn btn-secondary mt-3">⬅ Quay lại</a>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
