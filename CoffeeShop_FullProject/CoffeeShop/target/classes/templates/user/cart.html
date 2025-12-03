@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Giỏ hàng - CoffeeShop</title>
@@ -12,50 +12,73 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        .navbar {
-            background-color: #4e342e !important;
-        }
-        .navbar-brand, .nav-link {
-            color: white !important;
-            font-weight: 600;
+        h2.title {
+            font-weight: 700;
+            color: #4e342e;
         }
 
         .cart-card {
-            background: white;
-            padding: 20px;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            background: #fff;
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.15);
         }
 
         .cart-img {
-            width: 90px;
-            height: 90px;
+            width: 95px;
+            height: 95px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 12px;
         }
 
         .btn-coffee {
             background-color: #6d4c41;
             color: white;
             font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 10px;
         }
         .btn-coffee:hover {
             background-color: #5d4037;
-        }
-
-        .qty-box {
-            width: 45px;
-            text-align: center;
-            border-radius: 6px;
-            border: 1px solid #aaa;
+            color: white;
         }
 
         .btn-del {
-            background-color: #b71c1c;
+            background-color: #c62828;
             color: white;
+            border-radius: 8px;
         }
         .btn-del:hover {
             background-color: #8b0000;
+            color: white;
+        }
+
+        .qty-box {
+            width: 50px;
+            text-align: center;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+            font-weight: 600;
+        }
+
+        table th {
+            color: #5d4037;
+            font-weight: 700;
+        }
+
+        table tbody tr td {
+            vertical-align: middle;
+        }
+
+        .price {
+            color: #d32f2f;
+            font-weight: 700;
+        }
+
+        .total-box {
+            font-size: 22px;
+            color: #4e342e;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -63,30 +86,21 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand" href="/">CoffeeShop</a>
-
-        <div>
-            <a class="nav-link d-inline-block" href="/cart">🛒 Giỏ hàng</a>
-            <a class="nav-link d-inline-block" href="/login">🔐 Đăng nhập</a>
-        </div>
-    </div>
-</nav>
+<div th:replace="layout/navbar :: navbar"></div>
 
 <div class="container mt-4">
 
-    <h2>Giỏ hàng của bạn</h2>
+    <h2 class="title">🛒 Giỏ hàng của bạn</h2>
 
     <!-- EMPTY CART -->
     <div class="alert alert-warning mt-3" th:if="${items == null or #lists.isEmpty(items)}">
-        Giỏ hàng trống. <a href="/">Quay lại mua hàng</a>
+        Giỏ hàng đang trống. <a href="/" class="fw-bold">Tiếp tục mua hàng</a>
     </div>
 
     <!-- CART ITEMS -->
     <div class="cart-card mt-3" th:if="${items != null and !#lists.isEmpty(items)}">
 
-        <table class="table">
+        <table class="table align-middle">
             <thead>
             <tr>
                 <th>Sản phẩm</th>
@@ -100,21 +114,22 @@
             <tbody>
             <tr th:each="item : ${items}">
 
+                <!-- COL 1: IMAGE + NAME -->
                 <td>
                     <div class="d-flex align-items-center">
-                        <img th:src="@{'/img/' + ${item.product.image}}" class="cart-img me-3">
+
+                        <img th:src="@{'/img/' + ${item.product.image}}"
+                             class="cart-img me-3">
 
                         <div>
-                            <strong th:text="${item.product.name}"></strong>
+                            <div class="fw-bold" th:text="${item.product.name}"></div>
 
-                            <!-- ⭐ HIỂN THỊ OPTION ⭐ -->
+                            <!-- OPTIONS -->
                             <div class="text-muted small mt-1">
-
                                 Size: <span th:text="${item.size}"></span> •
                                 Đường: <span th:text="${item.sugar}"></span> •
                                 Đá: <span th:text="${item.ice}"></span>
-
-                                <br/>
+                                <br>
 
                                 <span th:if="${!#lists.isEmpty(item.toppings)}">
                                     Topping:
@@ -123,24 +138,29 @@
                                         <span th:if="${!iter.last}">, </span>
                                     </span>
                                 </span>
-
                             </div>
+
                         </div>
                     </div>
                 </td>
 
-                <td th:text="${item.product.price} + ' đ'"></td>
+                <!-- GIÁ -->
+                <td class="price"
+                    th:text="${#numbers.formatDecimal(item.product.price,0,'COMMA',0,'POINT')} + ' đ'"></td>
 
+                <!-- SỐ LƯỢNG -->
                 <td>
                     <input type="text" class="qty-box" th:value="${item.quantity}" readonly>
                 </td>
 
-                <!-- ⭐ Tạm tính = subtotal ⭐ -->
-                <td th:text="${item.subTotal} + ' đ'"></td>
+                <!-- TẠM TÍNH -->
+                <td class="price"
+                    th:text="${#numbers.formatDecimal(item.subTotal,0,'COMMA',0,'POINT')} + ' đ'"></td>
 
+                <!-- XÓA -->
                 <td>
                     <a th:href="@{/cart/remove(productId=${item.product.id})}"
-                       class="btn btn-del btn-sm">X</a>
+                       class="btn btn-del btn-sm">Xóa</a>
                 </td>
 
             </tr>
@@ -148,10 +168,10 @@
         </table>
 
         <!-- TOTAL -->
-        <div class="text-end mt-3">
-            <h4>Tổng tiền:
-                <span class="text-danger fw-bold" th:text="${total} + ' đ'"></span>
-            </h4>
+        <div class="text-end mt-3 total-box">
+            Tổng tiền:
+            <span class="price"
+                  th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' đ'"></span>
         </div>
 
         <!-- BUTTONS -->
@@ -164,7 +184,9 @@
         </div>
 
     </div>
+
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

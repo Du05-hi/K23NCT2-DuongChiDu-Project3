@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        /* Nâu nhạt đẹp */
+        .navbar-coffee {
+            background-color: #6d4c41 !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+        }
+
+        .navbar-coffee .nav-link,
+        .navbar-coffee .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .navbar-coffee .nav-link:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:fragment="navbar">
+
+    <nav class="navbar navbar-expand-lg navbar-coffee"
+         style="background-color:#6d4c41 !important;"> <!-- Nâu nhạt -->
+
+        <div class="container">
+
+            <a class="navbar-brand" href="/">CoffeeShop</a>
+
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+
+                <!-- LEFT -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Tất cả sản phẩm</a></li>
+                </ul>
+
+                <!-- RIGHT -->
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cart}">🛒 Giỏ hàng</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.currentUser != null}">
+                        <a class="nav-link" th:href="@{/orders/history}">📦 Lịch sử đặt hàng</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.currentUser == null}">
+                        <a class="nav-link" href="/login">Đăng nhập</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.currentUser == null}">
+                        <a class="nav-link" href="/register">Đăng ký</a>
+                    </li>
+
+                    <li class="nav-item dropdown" th:if="${session.currentUser != null}">
+                        <a class="nav-link dropdown-toggle" id="userMenu" role="button"
+                           data-bs-toggle="dropdown">
+                            👋 Xin chào, <span th:text="${session.currentUser.fullName}"></span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile">Thông tin cá nhân</a></li>
+                            <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+</div>
+
+</body>
+</html>

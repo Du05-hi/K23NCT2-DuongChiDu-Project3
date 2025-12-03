@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử đặt hàng</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: #f3ede3;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .order-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.15);
+            margin-bottom: 18px;
+            transition: .2s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,.25);
+        }
+
+        .order-title {
+            font-weight: 700;
+            color: #4e342e;
+        }
+
+        .btn-detail {
+            background: #6d4c41;
+            color: white;
+            border-radius: 10px;
+            padding: 6px 18px;
+        }
+
+        .btn-detail:hover {
+            opacity: .85;
+            color: white;
+        }
+
+        .badge-status {
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="layout/navbar :: navbar"></div>
+
+
+<div class="container mt-4 mb-5">
+
+    <h2 class="fw-bold mb-3">📦 Lịch sử đặt hàng</h2>
+
+
+    <!-- Nếu chưa có đơn nào -->
+    <div th:if="${#lists.isEmpty(orders)}" class="text-center mt-5">
+        <h4 class="text-secondary">Bạn chưa có đơn hàng nào 😢</h4>
+        <a href="/products" class="btn btn-detail mt-3">Mua ngay</a>
+    </div>
+
+
+    <!-- Danh sách đơn hàng -->
+    <div th:each="o : ${orders}" th:if="${not #lists.isEmpty(orders)}">
+
+        <div class="order-card">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="order-title">
+                        Đơn hàng #<span th:text="${o.id}"></span>
+                    </div>
+
+                    <div class="text-muted">
+                        Ngày đặt:
+                        <span th:text="${#temporals.format(o.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+
+                    <div class="mt-1">
+                        <span class="badge-status bg-warning text-dark"
+                              th:text="${o.status}">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <div class="fw-bold text-danger" style="font-size: 18px;"
+                         th:text="${o.total} + ' đ'"></div>
+
+                    <a th:href="@{/orders/detail(id=${o.id})}"
+                       class="btn btn-detail mt-2">
+                        Xem chi tiết
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PHÂN TRANG -->
+    <div class="d-flex justify-content-center mt-4" th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination">
+
+                <!-- Previous -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/orders/history(page=${currentPage - 1})}">«</a>
+                </li>
+
+                <!-- Page numbers -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:text="${i + 1}"
+                       th:href="@{/orders/history(page=${i})}"></a>
+                </li>
+
+                <!-- Next -->
+                <li class="page-item"
+                    th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/orders/history(page=${currentPage + 1})}">»</a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+</body>
+</html>

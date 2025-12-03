@@ -29,12 +29,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Đăng nhập
+    // ⭐ Đăng nhập CHUẨN – LẤY USER ĐÚNG TỪ DATABASE ⭐
     public User login(String email, String password) {
-        User u = userRepository.findByEmail(email);
-        if (u != null && u.getPassword().equals(password)) {
-            return u;
-        }
-        return null;
+        return userRepository.findByEmailAndPassword(email, password);
     }
 }

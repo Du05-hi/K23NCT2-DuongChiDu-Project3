@@ -6,10 +6,14 @@ import com.coffeeshop.repository.ProductRepository;
 import com.coffeeshop.repository.ToppingRepository;
 import com.coffeeshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,25 +33,47 @@ public class ProductController {
     @Autowired
     private ToppingRepository toppingRepository;
 
-    // ================= LIST ==================
+    // ===================== PRODUCT LIST + PAGINATION =====================
     @GetMapping("/products")
-    public String listProducts(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+    public String listProducts(Model model,
+                               @RequestParam(defaultValue = "0") int page) {
+
+        int pageSize = 8; // 8 sản phẩm / trang
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+
         model.addAttribute("categories", categoryRepository.findAll());
+
         return "user/product-list";
     }
 
-    // =============== VIEW BY CATEGORY (KHÔNG TRÙNG NỮA) ===============
+    // ===================== FILTER BY CATEGORY =====================
     @GetMapping("/products/category/{id}")
-    public String listByCategory(@PathVariable("id") Integer id, Model model) {
+    public String listByCategory(@PathVariable("id") Integer id,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 Model model) {
 
-        model.addAttribute("products", productService.findByCategory(id));
+        int pageSize = 8;
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Product> productPage = productService.findByCategoryPaged(id, pageable);
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+
         model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categoryId", id);
 
         return "user/product-list";
     }
 
-    // =============== DETAIL PAGE ===============
+    // ===================== PRODUCT DETAIL =====================
     @GetMapping("/product/{id}")
     public String detail(@PathVariable("id") Integer id, Model model) {
 
@@ -69,7 +95,7 @@ public class ProductController {
             model.addAttribute("related", related);
         }
 
-        // ================ TOPPING LIST ================
+        // ================= TOPPINGS =================
         model.addAttribute("toppings", toppingRepository.findAll());
 
         return "user/product-detail";

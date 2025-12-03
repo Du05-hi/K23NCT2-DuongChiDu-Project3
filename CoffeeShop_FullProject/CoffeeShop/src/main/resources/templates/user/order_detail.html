@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết đơn hàng</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: #f3ede3;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .order-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4e342e;
+            border-left: 4px solid #6d4c41;
+            padding-left: 10px;
+            margin-bottom: 12px;
+        }
+
+        .info-box {
+            background: #f7f2ec;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            background: #6d4c41;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 22px;
+        }
+        .back-btn:hover {
+            opacity: .85;
+            color: white;
+        }
+
+        table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="layout/navbar :: navbar"></div>
+
+<div class="container mt-4 mb-5">
+
+    <div class="order-card">
+
+        <h3 class="mb-3 fw-bold">
+            📦 Chi tiết đơn hàng #<span th:text="${order.id}"></span>
+        </h3>
+
+        <!-- THÔNG TIN ĐƠN -->
+        <div class="section-title">Thông tin đơn hàng</div>
+
+        <div class="info-box">
+            <p class="mb-1"><strong>Ngày đặt:</strong>
+                <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+
+            <p class="mb-1"><strong>Trạng thái:</strong>
+                <span class="badge bg-warning text-dark" th:text="${order.status}"></span>
+            </p>
+
+            <p class="mb-1"><strong>Người nhận:</strong>
+                <span th:text="${order.customerName}"></span>
+            </p>
+
+            <p class="mb-1"><strong>Số điện thoại:</strong>
+                <span th:text="${order.phone}"></span>
+            </p>
+
+            <p class="mb-1"><strong>Địa chỉ giao hàng:</strong>
+                <span th:text="${order.address}"></span>
+            </p>
+
+            <p class="mb-1"><strong>Thanh toán:</strong>
+                <span class="text-primary fw-bold" th:text="${order.paymentMethod}"></span>
+            </p>
+        </div>
+
+        <!-- DANH SÁCH SẢN PHẨM -->
+        <div class="section-title">Sản phẩm đã đặt</div>
+
+        <table class="table table-striped">
+            <thead style="background:#6d4c41; color:white;">
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Tùy chọn</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td class="fw-bold" th:text="${item.product.name}"></td>
+
+                <td>
+                    <div>Size: <span th:text="${item.size}"></span></div>
+                    <div>Đường: <span th:text="${item.sugar}"></span></div>
+                    <div>Đá: <span th:text="${item.ice}"></span></div>
+                    <div>Topping: <span th:text="${item.toppingNames}"></span></div>
+                </td>
+
+                <td th:text="${item.quantity}"></td>
+
+                <td class="text-danger fw-bold" th:text="${item.price} + ' đ'"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- TỔNG TIỀN -->
+        <h4 class="text-end mt-4">
+            Tổng thanh toán:
+            <span class="text-danger fw-bold" style="font-size:22px;"
+                  th:text="${order.total} + ' đ'"></span>
+        </h4>
+
+        <!-- BACK -->
+        <div class="text-start mt-3">
+            <a href="/orders/history" class="back-btn">◀ Quay lại lịch sử đơn hàng</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -12,71 +12,13 @@
             background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
-
-        .navbar {
-            background-color: #4e342e !important;
-        }
-
-        .navbar-brand, .nav-link {
-            color: white !important;
-            font-weight: 600;
-        }
-
-        .nav-link:hover {
-            opacity: .85;
-        }
     </style>
 </head>
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
-<nav class="navbar navbar-expand-lg mb-3">
-    <div class="container">
-
-        <a class="navbar-brand" href="/">CoffeeShop</a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarMenu">
-
-            <ul class="navbar-nav me-auto">
-
-                <!-- DANH MỤC -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        ☕ Danh mục
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li th:each="cate : ${categories}">
-                            <a class="dropdown-item"
-                               th:text="${cate.name}"
-                               th:href="@{/category/{id}(id=${cate.id})}">
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/products">📦 Tất cả sản phẩm</a>
-                </li>
-
-            </ul>
-
-            <ul class="navbar-nav">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/cart">🛒 Giỏ hàng</a>
-                </li>
-
-            </ul>
-
-        </div>
-    </div>
-</nav>
+<!-- ================= NAVBAR (GỌI FRAGMENT MỚI) ================= -->
+<div th:replace="layout/navbar :: navbar"></div>
 
 
 <!-- ================= CONTENT ================= -->
