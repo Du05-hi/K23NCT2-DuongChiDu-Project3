@@ -2,12 +2,23 @@ package com.coffeeshop.repository;
 
 import com.coffeeshop.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    // Tìm user theo email để kiểm tra đăng ký trùng email
+    // ============================
+    // 🔎 Kiểm tra email tồn tại
+    // ============================
     User findByEmail(String email);
 
-    // ⭐ HÀM ĐĂNG NHẬP ĐÚNG CHUẨN – QUAN TRỌNG NHẤT ⭐
+    // ============================
+    // 🔐 Đăng nhập
+    // ============================
     User findByEmailAndPassword(String email, String password);
+
+    // ============================
+    // 👥 Đếm số người dùng
+    // ============================
+    @Query("SELECT COUNT(u) FROM User u")
+    Long countUsers();
 }

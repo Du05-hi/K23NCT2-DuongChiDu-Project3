@@ -35,7 +35,6 @@
 <!-- ⭐⭐ NAVBAR ⭐⭐ -->
 <div th:replace="layout/navbar :: navbar"></div>
 
-
 <div class="container mt-4">
 
     <a href="/products" class="btn btn-secondary mb-3">⬅ Trở về</a>
@@ -113,7 +112,6 @@
 
     </div>
 
-
     <!-- ==================== SẢN PHẨM LIÊN QUAN ==================== -->
     <h4 class="mt-5">Sản phẩm liên quan</h4>
 
@@ -138,6 +136,83 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ==================== ĐÁNH GIÁ SẢN PHẨM ==================== -->
+<div class="container mt-5" id="review-section">
+
+    <h3 class="mb-4">💬 Đánh giá sản phẩm</h3>
+
+    <!-- THÔNG TIN SAO TRUNG BÌNH -->
+    <div class="mb-3">
+        <strong>Điểm trung bình: </strong>
+
+        <span th:each="i : ${#numbers.sequence(1,5)}">
+            <span th:text="${i <= avgRating} ? '⭐' : '☆'" style="font-size:22px;"></span>
+        </span>
+
+        <span class="text-muted ms-2" th:text="'(' + ${reviewCount} + ' đánh giá)'"></span>
+    </div>
+
+    <hr>
+
+    <!-- FORM GỬI ĐÁNH GIÁ -->
+    <h5 class="mt-4">Viết đánh giá</h5>
+
+    <form action="/review/add" method="post" class="mb-4">
+
+        <input type="hidden" name="productId" th:value="${product.id}">
+
+        <label class="mt-2">Số sao</label>
+        <select name="rating" class="form-select w-25 mb-2">
+            <option value="5">⭐⭐⭐⭐⭐ - Tuyệt vời</option>
+            <option value="4">⭐⭐⭐⭐ - Ngon</option>
+            <option value="3">⭐⭐⭐ - Tạm ổn</option>
+            <option value="2">⭐⭐ - Không ngon lắm</option>
+            <option value="1">⭐ - Tệ</option>
+        </select>
+
+        <textarea name="comment"
+                  class="form-control mb-2"
+                  rows="3"
+                  placeholder="Cảm nhận của bạn về sản phẩm..."></textarea>
+
+        <button type="submit"
+                class="btn"
+                style="background:#6d4c41;color:white;">
+            Gửi đánh giá
+        </button>
+    </form>
+
+    <hr>
+
+    <!-- DANH SÁCH CÁC ĐÁNH GIÁ -->
+    <div th:if="${#lists.isEmpty(reviews)}">
+        <p class="text-muted">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(reviews)}">
+        <div th:each="rv : ${reviews}" class="p-3 mb-3"
+             style="background:white;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+
+            <!-- Số sao -->
+            <div>
+                <span th:each="i : ${#numbers.sequence(1, rv.rating)}" style="font-size:20px;">⭐</span>
+            </div>
+
+            <!-- Nội dung bình luận -->
+            <p class="mt-2 mb-1" th:text="${rv.comment}"></p>
+
+            <!-- Người bình luận -->
+            <small class="fw-semibold" th:text="${rv.user.fullName}"></small>
+
+            <!-- Thời gian -->
+            <br>
+            <small class="text-muted"
+                   th:text="${#temporals.format(rv.createdAt, 'dd/MM/yyyy HH:mm')}"></small>
         </div>
     </div>
 

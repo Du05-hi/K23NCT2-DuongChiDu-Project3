@@ -8,7 +8,7 @@
 
     <style>
         body {
-            background-color: #f4eee3;
+            background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
         .sidebar {
@@ -30,12 +30,13 @@
             border-radius: 6px;
         }
         .header-bar {
-            background-color: #795548;
+            background-color: #4e342e; /* ĐỒNG BỘ */
             color: white;
             padding: 15px 25px;
             font-size: 22px;
             font-weight: bold;
             margin-left: 220px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         .content {
             margin-left: 240px;
@@ -54,20 +55,19 @@
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
+    <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
+    <a href="/admin/charts">📈 Biểu đồ thống kê</a>
     <a href="/admin/categories">📂 Quản lý danh mục</a>
     <a href="/admin/products">🥤 Quản lý sản phẩm</a>
     <a href="/admin/orders">📦 Quản lý đơn hàng</a>
     <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
 </div>
 
-<!-- HEADER -->
 <div class="header-bar">
     Danh mục sản phẩm
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="content">
 
     <div class="card p-4 shadow">
@@ -76,7 +76,6 @@
             <a href="/admin/categories/add" class="btn btn-add">➕ Thêm danh mục</a>
         </div>
 
-        <!-- TABLE -->
         <table class="table table-bordered table-hover bg-white">
             <thead class="table-secondary">
             <tr>
@@ -92,7 +91,8 @@
                 <td th:text="${cate.name}"></td>
                 <td>
                     <a th:href="@{/admin/categories/edit/{id}(id=${cate.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                    <a th:href="@{/admin/categories/delete/{id}(id=${cate.id})}" class="btn btn-sm btn-danger"
+                    <a th:href="@{/admin/categories/delete/{id}(id=${cate.id})}"
+                       class="btn btn-sm btn-danger"
                        onclick="return confirm('Bạn chắc chắn muốn xóa?');">
                         Xóa
                     </a>

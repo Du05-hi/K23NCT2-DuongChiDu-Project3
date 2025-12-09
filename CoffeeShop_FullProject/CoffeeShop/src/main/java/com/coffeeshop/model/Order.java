@@ -19,19 +19,22 @@ public class Order {
 
     private String status = "PENDING"; // trạng thái mặc định
 
-    // ⭐ THÊM 4 TRƯỜNG BẮT BUỘC CHO CHECKOUT ⭐
+    // ⭐ THÔNG TIN KHÁCH HÀNG CHECKOUT ⭐
     private String customerName;
     private String phone;
     private String address;
     private String paymentMethod; // COD / BANK / MOMO / VISA
 
+    // ⭐⭐ THÔNG TIN COUPON (MỚI THÊM) ⭐⭐
+    private String couponCode;        // mã giảm giá
+    private Double discountAmount;    // số tiền đã giảm
 
-    // Giữ nguyên liên kết user cũ của bạn
+    // Giữ nguyên liên kết user
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Giữ nguyên orderDetails của bạn
+    // Giữ nguyên orderDetails
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
@@ -76,7 +79,7 @@ public class Order {
     }
 
 
-    // ⭐ GET/SET MỚI THÊM ⭐
+    // ⭐ THÔNG TIN KHÁCH HÀNG ⭐
     public String getCustomerName() {
         return customerName;
     }
@@ -107,6 +110,24 @@ public class Order {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+
+    // ⭐⭐ COUPON (GET/SET) ⭐⭐
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public Double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Double discountAmount) {
+        this.discountAmount = discountAmount;
     }
 
 

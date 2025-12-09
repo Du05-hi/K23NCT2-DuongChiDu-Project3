@@ -7,10 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+
         body {
-            background-color: #f4eee3;
+            background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
+
         .sidebar {
             height: 100vh;
             background-color: #3e2723;
@@ -18,6 +20,7 @@
             position: fixed;
             width: 220px;
         }
+
         .sidebar a {
             color: #f8ede3;
             display: block;
@@ -25,36 +28,45 @@
             text-decoration: none;
             font-size: 17px;
         }
+
         .sidebar a:hover {
             background-color: #5d4037;
             border-radius: 6px;
         }
+
         .header-bar {
-            background-color: #795548;
+            background-color: #4e342e; /* CÙNG MÀU ORDER */
             color: white;
             padding: 15px 25px;
             font-size: 22px;
             font-weight: bold;
             margin-left: 220px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
+
         .content {
             margin-left: 240px;
             padding: 20px;
         }
+
         .btn-add {
             background-color: #6d4c41;
             color: white;
             font-weight: 600;
         }
+
         .btn-add:hover {
             background-color: #5d4037;
         }
+
     </style>
 </head>
 
 <body>
 
 <div class="sidebar">
+    <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
+    <a href="/admin/charts">📈 Biểu đồ thống kê</a>
     <a href="/admin/categories">📂 Quản lý danh mục</a>
     <a href="/admin/products">🥤 Quản lý sản phẩm</a>
     <a href="/admin/orders">📦 Quản lý đơn hàng</a>
@@ -68,6 +80,7 @@
 <div class="content">
 
     <div class="card p-4 shadow">
+
         <div class="d-flex justify-content-between mb-3">
             <h4 class="m-0">Tất cả sản phẩm</h4>
             <a href="/admin/products/add" class="btn btn-add">➕ Thêm sản phẩm</a>
@@ -99,7 +112,8 @@
                 <td th:text="${p.category.name}"></td>
 
                 <td>
-                    <span class="text-danger fw-bold" th:text="${p.price} + ' đ'"></span>
+                    <span class="text-danger fw-bold"
+                          th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'"></span>
                 </td>
 
                 <td>
@@ -116,7 +130,6 @@
             </tbody>
 
         </table>
-
     </div>
 
 </div>

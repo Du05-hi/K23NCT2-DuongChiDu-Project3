@@ -1,6 +1,7 @@
 package com.coffeeshop.controller;
 
 import com.coffeeshop.dto.CartItem;
+import com.coffeeshop.model.Coupon;
 import com.coffeeshop.model.Order;
 import com.coffeeshop.model.OrderDetail;
 import com.coffeeshop.model.Topping;
@@ -46,6 +47,8 @@ public class CheckoutController {
 
         model.addAttribute("items", cartService.getItems());
         model.addAttribute("total", cartService.getTotal());
+        model.addAttribute("coupon", session.getAttribute("coupon"));
+        model.addAttribute("discount", session.getAttribute("discount"));
 
         return "user/checkout";
     }
@@ -69,22 +72,48 @@ public class CheckoutController {
         List<CartItem> cart = new ArrayList<>(cartService.getItems());
         if (cart.isEmpty()) return "redirect:/cart";
 
-        // ⭐ Tạo đơn hàng
+        double originalTotal = cartService.getTotal();
+
+        // ==========================================
+        // ⭐ LẤY COUPON TỪ SESSION
+        // ==========================================
+        Coupon coupon = (Coupon) session.getAttribute("coupon");
+        Double discountAmount = 0.0;
+
+        if (coupon != null) {
+            discountAmount = originalTotal * coupon.getDiscountValue() / 100;
+        }
+
+        double finalTotal = originalTotal - discountAmount;
+
+        // ==========================================
+        // ⭐ TẠO ĐƠN HÀNG
+        // ==========================================
         Order order = new Order();
         order.setCustomerName(customerName);
         order.setPhone(phone);
         order.setAddress(address);
         order.setPaymentMethod(paymentMethod);
         order.setStatus("PENDING");
-        order.setTotal(cartService.getTotal());
         order.setOrderDate(LocalDateTime.now());
 
-        // ⭐ GẮN USER — QUAN TRỌNG
+        // ⭐ LƯU TỔNG TIỀN SAU GIẢM
+        order.setTotal(finalTotal);
+
+        // ⭐ LƯU COUPON VÀO ORDER
+        if (coupon != null) {
+            order.setCouponCode(coupon.getCode());
+            order.setDiscountAmount(discountAmount);
+        }
+
+        // ⭐ GẮN USER
         order.setUser(user);
 
         orderRepo.save(order);
 
-        // ⭐ Lưu chi tiết đơn hàng
+        // ==========================================
+        // ⭐ LƯU CHI TIẾT ĐƠN HÀNG
+        // ==========================================
         List<OrderDetail> detailList = new ArrayList<>();
 
         for (CartItem item : cart) {
@@ -98,14 +127,13 @@ public class CheckoutController {
             detail.setSugar(item.getSugar());
             detail.setIce(item.getIce());
 
-            // ⭐ Topping
+            // ⭐ Toppings
             if (item.getToppings() != null && !item.getToppings().isEmpty()) {
                 String names = item.getToppings()
                         .stream()
                         .map(Topping::getName)
                         .reduce((a, b) -> a + ", " + b)
                         .orElse("");
-
                 detail.setToppingNames(names);
             }
 
@@ -116,7 +144,12 @@ public class CheckoutController {
         order.setOrderDetails(detailList);
         orderRepo.save(order);
 
-        // ⭐ Xóa giỏ hàng sau khi đặt
+        // ==========================================
+        // ⭐ XOÁ GIỎ HÀNG + XOÁ COUPON
+        // ==========================================
+        session.removeAttribute("coupon");
+        session.removeAttribute("discount");
+
         cartService.clear();
 
         model.addAttribute("order", order);

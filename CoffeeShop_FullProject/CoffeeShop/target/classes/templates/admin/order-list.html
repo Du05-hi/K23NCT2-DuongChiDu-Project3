@@ -8,83 +8,179 @@
 
     <style>
         body {
-            background-color: #f4eee3;
+            background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
 
+        /* ================= SIDEBAR ================= */
         .sidebar {
             height: 100vh;
             background-color: #3e2723;
             padding-top: 30px;
             position: fixed;
-            width: 220px;
+            width: 230px;
+            box-shadow: 3px 0 8px rgba(0,0,0,0.25);
         }
 
         .sidebar a {
             color: #f8ede3;
             display: block;
-            padding: 12px 20px;
+            padding: 14px 22px;
             text-decoration: none;
             font-size: 17px;
+            transition: 0.2s;
         }
 
         .sidebar a:hover {
             background-color: #5d4037;
-            border-radius: 6px;
+            padding-left: 28px;
         }
 
+        /* ================= HEADER ================= */
         .header-bar {
-            background-color: #795548;
+            background-color: #6d4c41;
             color: white;
             padding: 15px 25px;
             font-size: 22px;
             font-weight: bold;
-            margin-left: 220px;
+            margin-left: 230px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
         }
 
         .content {
-            margin-left: 240px;
-            padding: 20px;
+            margin-left: 250px;
+            padding: 25px;
         }
 
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 12px;
+        /* ================= FILTER CARD ================= */
+        .filter-card, .table-card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .filter-title {
+            font-weight: 600;
+            color: #4e342e;
+        }
+
+        /* ================= TABLE STYLE ================= */
+        table thead {
+            background-color: #d7ccc8;
+            color: #4e342e;
             font-weight: 600;
         }
 
-        .pending { background-color: #ffe082; }
-        .completed { background-color: #c5e1a5; }
-        .cancelled { background-color: #ef9a9a; }
+        .table-hover tbody tr:hover {
+            background-color: #f0e9e4;
+        }
+
+        /* ================= STATUS SELECT ================= */
+        .status-select {
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #bca89f;
+            background-color: #fff8f0;
+            color: #4e342e;
+        }
+
+        .btn-save {
+            background-color: #6d4c41;
+            color: white;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .btn-save:hover {
+            background-color: #5d4037;
+        }
+
+        .btn-view {
+            background-color: #795548;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .btn-view:hover {
+            background-color: #6d4c41;
+        }
+
     </style>
 </head>
 
 <body>
 
+<!-- ===================== SIDEBAR ===================== -->
 <div class="sidebar">
+    <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
+    <a href="/admin/charts">📈 Biểu đồ thống kê</a>
     <a href="/admin/categories">📂 Quản lý danh mục</a>
     <a href="/admin/products">🥤 Quản lý sản phẩm</a>
     <a href="/admin/orders">📦 Quản lý đơn hàng</a>
     <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
 </div>
 
+<!-- ===================== HEADER ===================== -->
 <div class="header-bar">
-    Danh sách đơn hàng
+    Trang quản lý đơn hàng
 </div>
 
+<!-- ===================== CONTENT ===================== -->
 <div class="content">
 
-    <div class="card p-4 shadow">
+    <!-- ========= FILTER CARD ========= -->
+    <div class="filter-card mb-4">
+        <h4 class="filter-title mb-3">🔎 Bộ lọc đơn hàng</h4>
 
-        <h4 class="mb-3">Tất cả đơn hàng</h4>
+        <form class="row" method="get" action="/admin/orders">
 
-        <table class="table table-bordered table-hover bg-white">
-            <thead class="table-secondary">
+            <div class="col-md-3 mb-2">
+                <input type="text" class="form-control"
+                       name="keyword"
+                       placeholder="Tìm theo khách hàng..."
+                       th:value="${keyword}">
+            </div>
+
+            <div class="col-md-3 mb-2">
+                <select class="form-select" name="status">
+                    <option value="">-- Trạng thái --</option>
+                    <option value="PENDING" th:selected="${status == 'PENDING'}">Đang xử lý</option>
+                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Hoàn thành</option>
+                    <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Đã hủy</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mb-2">
+                <input type="date" class="form-control" name="from" th:value="${from}">
+            </div>
+
+            <div class="col-md-2 mb-2">
+                <input type="date" class="form-control" name="to" th:value="${to}">
+            </div>
+
+            <div class="col-md-2 mb-2">
+                <button class="btn btn-save w-100">Lọc</button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- ========= ORDER TABLE ========= -->
+    <div class="table-card">
+
+        <h4 class="filter-title mb-3">📦 Danh sách đơn hàng</h4>
+
+        <table class="table table-bordered table-hover">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Khách hàng</th>
                 <th>Tổng tiền</th>
-                <th>Trạng thái</th>
+                <th>Cập nhật trạng thái</th>
                 <th>Ngày tạo</th>
                 <th>Chi tiết</th>
             </tr>
@@ -98,29 +194,38 @@
                 <td th:text="${o.customerName}"></td>
 
                 <td>
-                    <span class="text-danger fw-bold" th:text="${o.total} + ' đ'"></span>
-                </td>
-
-                <td>
-                    <span class="status-badge"
-                          th:classappend="${o.status} == 'Pending' ? ' pending' :
-                                          ${o.status} == 'Completed' ? ' completed' :
-                                          ' cancelled'"
-                          th:text="${o.status}">
+                    <span class="text-danger fw-bold"
+                          th:text="${#numbers.formatDecimal(o.total,0,'COMMA',0,'POINT')} + ' đ'">
                     </span>
                 </td>
 
-                <td th:text="${#dates.format(o.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <!-- ========= INLINE STATUS UPDATE ========= -->
+                <td>
+                    <form method="post" action="/admin/orders/update-status" class="d-flex">
+
+                        <input type="hidden" name="id" th:value="${o.id}">
+
+                        <select name="status" class="status-select me-2">
+                            <option value="PENDING" th:selected="${o.status == 'PENDING'}">Đang xử lý</option>
+                            <option value="COMPLETED" th:selected="${o.status == 'COMPLETED'}">Hoàn thành</option>
+                            <option value="CANCELLED" th:selected="${o.status == 'CANCELLED'}">Đã hủy</option>
+                        </select>
+
+                        <button class="btn btn-save">Lưu</button>
+                    </form>
+                </td>
+
+                <!-- ========= DATE FORMAT ========= -->
+                <td th:text="${o.orderDate.format(T(java.time.format.DateTimeFormatter)
+                        .ofPattern('dd/MM/yyyy HH:mm'))}">
+                </td>
 
                 <td>
-                    <a th:href="@{/admin/orders/detail/{id}(id=${o.id})}" class="btn btn-sm btn-primary">
-                        Xem
-                    </a>
+                    <a th:href="@{/admin/orders/detail/{id}(id=${o.id})}" class="btn btn-view btn-sm">Xem</a>
                 </td>
             </tr>
 
             </tbody>
-
         </table>
 
     </div>

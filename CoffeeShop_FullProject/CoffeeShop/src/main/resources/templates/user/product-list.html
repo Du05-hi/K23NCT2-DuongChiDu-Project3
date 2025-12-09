@@ -7,12 +7,17 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
+    <!-- ⭐ FONT AWESOME CHO ICON SAO + FIRE -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         body {
             background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
 
+        /* CATEGORY TAGS */
         .cate-tag {
             background:#6d4c41;
             color:white !important;
@@ -28,7 +33,9 @@
             transform:translateY(-2px);
         }
 
+        /* PRODUCT CARD */
         .product-card {
+            position: relative;
             background:white;
             border-radius:14px;
             overflow:hidden;
@@ -46,6 +53,21 @@
             object-fit:cover;
         }
 
+        /* BADGE BEST SELLER */
+        .best-seller {
+            position:absolute;
+            top:10px;
+            left:10px;
+            background:#d84315;
+            color:white;
+            padding:5px 10px;
+            font-size:13px;
+            border-radius:6px;
+            font-weight:bold;
+            box-shadow:0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* BUTTONS */
         .btn-coffee {
             background:#6d4c41;
             color:white;
@@ -64,6 +86,7 @@
             color:white;
         }
 
+        /* PAGINATION */
         .pagination .page-link {
             color:#5d4037;
             font-weight:600;
@@ -79,7 +102,7 @@
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
+<!-- NAVBAR -->
 <div th:replace="layout/navbar :: navbar"></div>
 
 
@@ -87,8 +110,48 @@
 
     <h2 class="mt-3">Danh sách sản phẩm</h2>
 
-    <!-- DANH MỤC -->
-    <div class="mt-3">
+    <!-- ================= FILTER FORM ================= -->
+    <form class="row mt-3" method="get" action="/products/filter">
+
+        <!-- Search -->
+        <div class="col-md-4 mb-2">
+            <input type="text"
+                   name="keyword"
+                   th:value="${keyword}"
+                   class="form-control"
+                   placeholder="Tìm sản phẩm...">
+        </div>
+
+        <!-- Category -->
+        <div class="col-md-3 mb-2">
+            <select name="categoryId" class="form-select">
+                <option value="">-- Tất cả danh mục --</option>
+
+                <option th:each="c : ${categories}"
+                        th:value="${c.id}"
+                        th:text="${c.name}"
+                        th:selected="${categoryId == c.id}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Sort -->
+        <div class="col-md-3 mb-2">
+            <select name="sort" class="form-select">
+                <option value="">-- Sắp xếp --</option>
+                <option value="asc" th:selected="${sort == 'asc'}">Giá tăng dần</option>
+                <option value="desc" th:selected="${sort == 'desc'}">Giá giảm dần</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 mb-2">
+            <button class="btn btn-coffee w-100">Lọc</button>
+        </div>
+    </form>
+
+
+    <!-- ================= CATEGORY TAGS ================= -->
+    <div class="mt-4">
         <a class="cate-tag"
            th:each="c : ${categories}"
            th:text="${c.name}"
@@ -96,20 +159,46 @@
         </a>
     </div>
 
-    <!-- DANH SÁCH SẢN PHẨM -->
+
+    <!-- ================= PRODUCT LIST ================= -->
     <div class="row mt-4">
 
         <div class="col-md-3 mb-4" th:each="p : ${products}">
             <div class="product-card">
+
+                <!-- 🔥 BEST SELLER BADGE -->
+                <div class="best-seller"
+                     th:if="${reviewService.getAverageRating(p) > 4.5}">
+                    🔥 Bán chạy
+                </div>
+
                 <img class="product-img"
                      th:src="@{'/img/' + ${p.image}}">
 
                 <div class="p-3">
                     <h5 th:text="${p.name}"></h5>
 
+                    <!-- ⭐ HIỂN THỊ 5 SAO -->
+                    <div class="mb-2"
+                         th:with="avg=${reviewService.getAverageRating(p)},
+                                  count=${reviewService.countByProduct(p)}">
+
+                        <span th:each="star : ${#numbers.sequence(1,5)}">
+                            <i class="fa-solid"
+                               th:classappend="
+                                   ${star <= avg} ? 'fa-star text-warning' :
+                                   (${star - avg <= 0.5} ? 'fa-star-half-stroke text-warning' :
+                                                           'fa-star text-secondary')
+                               ">
+                            </i>
+                        </span>
+
+                        <span class="text-muted" th:text="'(' + count + ')'"></span>
+                    </div>
+
+                    <!-- PRICE -->
                     <p class="fw-bold text-danger"
-                       th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'">
-                    </p>
+                       th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'"></p>
 
                     <a th:href="@{/product/{id}(id=${p.id})}"
                        class="btn btn-coffee mb-2 w-100">
@@ -126,13 +215,14 @@
 
     </div>
 
-    <!-- PHÂN TRANG -->
+
+    <!-- ================= PAGINATION ================= -->
     <nav th:if="${totalPages > 1}">
         <ul class="pagination justify-content-center mt-4">
 
             <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/products(page=${page-1})}">
+                   th:href="@{/products/filter(page=${page-1}, keyword=${keyword}, categoryId=${categoryId}, sort=${sort})}">
                     «
                 </a>
             </li>
@@ -142,13 +232,13 @@
                 th:classappend="${i == page} ? 'active'">
                 <a class="page-link"
                    th:text="${i+1}"
-                   th:href="@{/products(page=${i})}">
+                   th:href="@{/products/filter(page=${i}, keyword=${keyword}, categoryId=${categoryId}, sort=${sort})}">
                 </a>
             </li>
 
             <li class="page-item" th:classappend="${page == totalPages-1} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/products(page=${page+1})}">
+                   th:href="@{/products/filter(page=${page+1}, keyword=${keyword}, categoryId=${categoryId}, sort=${sort})}">
                     »
                 </a>
             </li>

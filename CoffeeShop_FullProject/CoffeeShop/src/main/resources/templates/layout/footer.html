@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="footer">
+
+    <!-- FOOTER TRÊN: 4 CỘT GIỐNG CỘNG -->
+    <footer style="background:#ffffff;border-top:1px solid #e4e1d5;border-bottom:1px solid #e4e1d5;margin-top:70px;">
+        <div class="container py-5">
+            <div class="row gy-4">
+
+                <div class="col-md-3">
+                    <h6 style="text-transform:uppercase;letter-spacing:3px;color:#4a5a2c;font-weight:700;font-size:13px;">
+                        Tin tức
+                    </h6>
+                    <ul class="list-unstyled mt-2">
+                        <li><a href="/story" class="text-decoration-none" style="color:#333;font-size:14px;">Về CafeOnline</a></li>
+                        <li><a href="/news" class="text-decoration-none" style="color:#333;font-size:14px;">Bảng tin</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h6 style="text-transform:uppercase;letter-spacing:3px;color:#4a5a2c;font-weight:700;font-size:13px;">
+                        Cửa hàng
+                    </h6>
+                    <ul class="list-unstyled mt-2">
+                        <li><a href="/stores" class="text-decoration-none" style="color:#333;font-size:14px;">Danh sách cửa hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h6 style="text-transform:uppercase;letter-spacing:3px;color:#4a5a2c;font-weight:700;font-size:13px;">
+                        Đồ uống
+                    </h6>
+                    <ul class="list-unstyled mt-2">
+                        <li><a href="/menu" class="text-decoration-none" style="color:#333;font-size:14px;">Cà phê &amp; đồ uống</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h6 style="text-transform:uppercase;letter-spacing:3px;color:#4a5a2c;font-weight:700;font-size:13px;">
+                        Chính sách
+                    </h6>
+                    <ul class="list-unstyled mt-2">
+                        <li><a href="#" class="text-decoration-none" style="color:#333;font-size:14px;">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-decoration-none" style="color:#333;font-size:14px;">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr class="mt-4 mb-4" style="border-color:#e4e1d5;">
+
+            <div class="row gy-4 align-items-center">
+                <div class="col-md-6">
+                    <h6 style="text-transform:uppercase;letter-spacing:3px;color:#4a5a2c;font-weight:700;font-size:13px;">
+                        Kênh kết nối
+                    </h6>
+                    <div class="d-flex gap-3 fs-4 mt-2">
+                        <a href="#" class="text-decoration-none" style="color:#4a5a2c;"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-decoration-none" style="color:#4a5a2c;"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-decoration-none" style="color:#4a5a2c;"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h6 style="text-transform:uppercase;letter-spacing:3px;color:#4a5a2c;font-weight:700;font-size:13px;">
+                        Luôn cập nhật
+                    </h6>
+                    <form class="d-flex flex-wrap gap-2 mt-2">
+                        <input type="email" class="form-control" placeholder="Email" style="max-width:260px;border-radius:0;">
+                        <button type="button" class="btn"
+                                style="background:#4a5a2c;color:#fff;border-radius:0;padding:7px 26px;font-weight:600;letter-spacing:2px;font-size:12px;">
+                            Đăng ký
+                        </button>
+                    </form>
+                    <small class="d-block mt-2 text-muted">CafeOnline tôn trọng quyền riêng tư của bạn.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FOOTER DƯỚI: THÔNG TIN QUÁN -->
+    <footer style="background:#4a5a2c;color:#fefefe;text-align:center;">
+        <div class="container py-3">
+            <small>
+                CafeOnline – "Cà phê theo cách của bạn" ·
+                Địa chỉ: 25 Vũ Tông Phan · Điện thoại: 0365184434 ·
+                Email: duongchidu30072005@gmail.com
+            </small>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

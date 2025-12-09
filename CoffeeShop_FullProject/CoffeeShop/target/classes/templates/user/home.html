@@ -2,103 +2,295 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>CoffeeShop - Trang chủ</title>
+    <title>CafeOnline | Cà phê theo cách của bạn</title>
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <!-- Bootstrap + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #f3ede3;
-            font-family: 'Segoe UI', sans-serif;
+        :root{
+            --cong-green:#4a5a2c;
+            --cong-dark-green:#3b4621;
+            --cong-be:#f4e1b8;
+            --cong-be-light:#f9f1dc;
+            --cong-text:#333333;
+        }
+        body{
+            background:#faf6ed;
+            font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+            color:var(--cong-text);
+        }
+
+        /* ===== HERO SLIDER ===== */
+        .hero-slider{ position:relative;overflow:hidden;background:var(--cong-be);}
+        .hero-slider .slide{ min-height:440px;display:none;align-items:stretch;}
+        .hero-slider .slide.active{ display:flex;animation:fadeIn .9s ease-in-out;}
+        .hero-left{
+            flex:0 0 55%;
+            padding:55px 6%;
+            display:flex;flex-direction:column;justify-content:center;
+        }
+        .hero-right{ flex:0 0 45%;background-size:cover;background-position:center;}
+        .hero-tagline{
+            font-size:13px;text-transform:uppercase;letter-spacing:3px;
+            margin-bottom:10px;color:#b66b20;font-weight:700;
+        }
+        .hero-left h1{
+            font-size:48px;line-height:1.05;color:var(--cong-green);
+            text-transform:uppercase;font-weight:800;
+        }
+        .hero-left h1 span{ font-size:40px;display:block;}
+        .hero-left p{ margin-top:18px;font-size:15px;line-height:1.7;}
+        .hero-btn{
+            display:inline-block;margin-top:22px;padding:10px 28px;
+            background:var(--cong-green);color:#fff;border-radius:999px;
+            text-decoration:none;font-size:13px;font-weight:600;
+            letter-spacing:2px;text-transform:uppercase;
+        }
+        .hero-btn:hover{ background:var(--cong-dark-green);color:#fff;}
+        .slider-nav-btn{
+            position:absolute;top:50%;transform:translateY(-50%);
+            width:40px;height:40px;border-radius:50%;border:none;
+            background:var(--cong-green);color:#fff;font-size:20px;
+            display:flex;align-items:center;justify-content:center;cursor:pointer;
+        }
+        .slider-nav-btn.prev{ left:22px;}
+        .slider-nav-btn.next{ right:22px;}
+        .slider-nav-btn:hover{ background:var(--cong-dark-green);}
+
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+
+        /* ===== CÂU CHUYỆN ===== */
+        .story-section{ margin:70px auto 0;max-width:1150px;position:relative;}
+        .story-bg{
+            background:url('/img/story.jpg') center/cover no-repeat;
+            min-height:320px;filter:grayscale(30%);
+        }
+        .story-overlay{
+            background:rgba(244,225,184,0.92);
+            position:absolute;inset:0;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .story-title{
+            text-align:center;text-transform:uppercase;
+            letter-spacing:4px;font-weight:700;font-size:20px;
+        }
+
+        /* ===== PHA CHẾ + THỰC ĐƠN ===== */
+        .home-grid-2{ margin:50px auto 0;max-width:1150px;}
+        .grid-card{ position:relative;overflow:hidden;cursor:pointer;}
+        .grid-card img{
+            width:100%;height:360px;object-fit:cover;
+            transition:transform .7s ease;
+        }
+        .grid-card:hover img{ transform:scale(1.06);}
+        .grid-label{
+            position:absolute;left:50%;bottom:40px;transform:translateX(-50%);
+            background:rgba(244,225,184,0.95);
+            padding:10px 40px;letter-spacing:4px;font-weight:700;
+            text-transform:uppercase;font-size:18px;
+        }
+
+        /* ===== TIN TỨC ===== */
+        .news-highlight{ margin:70px auto 0;max-width:1150px;display:flex;min-height:320px;}
+        .news-left{
+            flex:0 0 50%;background:var(--cong-be-light);padding:50px;
+            display:flex;flex-direction:column;justify-content:center;
+        }
+        .news-right{
+            flex:0 0 50%;
+            background:url('/img/news.jpg') center/cover no-repeat;
+        }
+        .section-heading{
+            text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:18px;
+        }
+        .news-left p{ font-size:15px;line-height:1.7;}
+
+        /* ===== TUYỂN DỤNG ===== */
+        .recruit-section{ margin:70px auto 0;max-width:1150px;position:relative;}
+        .recruit-bg{
+            background:url('/img/recruit.jpg') center/cover no-repeat;
+            min-height:320px;
+        }
+        .recruit-box{
+            position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+            background:rgba(244,225,184,0.96);padding:32px 55px;
+            max-width:520px;text-align:center;
+        }
+        .recruit-box p{ margin-top:16px;line-height:1.7;font-size:15px;}
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width:991.98px){
+            nav .cong-menu{ display:none; }
+            .hero-slider .slide{ flex-direction:column;}
+            .hero-left{ flex-basis:auto;padding:35px 24px 15px;}
+            .hero-right{ min-height:260px;}
+            .story-section,.home-grid-2,.news-highlight,.recruit-section{
+                margin-left:16px;margin-right:16px;
+            }
+            .news-highlight{ flex-direction:column;}
+            .news-left,.news-right{ flex:0 0 100%;}
+            .recruit-box{ padding:22px 28px;}
+        }
+        @media (max-width:575.98px){
+            .hero-left h1{ font-size:34px;}
+            .hero-left h1 span{ font-size:30px;}
         }
     </style>
 </head>
 
 <body>
 
-<!-- ================= NAVBAR (GỌI FRAGMENT MỚI) ================= -->
-<div th:replace="layout/navbar :: navbar"></div>
+<!-- HEADER -->
+<div th:replace="layout/header :: header"></div>
 
+<!-- ===== HERO SLIDER ===== -->
+<section class="hero-slider">
 
-<!-- ================= CONTENT ================= -->
-<div class="container">
+    <!-- slide 1 -->
+    <div class="slide active">
+        <div class="hero-left">
+            <div class="hero-tagline">CafeOnline · Cà phê theo cách của bạn</div>
+            <h1>ĐẬM VỊ<span>ĐÚNG GU</span></h1>
+            <p>
+                Tại CafeOnline, mỗi ly cà phê được pha chế để phù hợp đúng “gu” của bạn:
+                từ cà phê sữa đá, bạc xỉu đến cacao nóng. Không gian ấm áp, nhẹ nhàng,
+                là nơi bạn bắt đầu ngày mới hoặc kết thúc một ngày dài thật thư giãn.
+            </p>
+            <a href="/menu" class="hero-btn">Xem thực đơn</a>
+        </div>
+        <div class="hero-right" style="background-image:url('/img/slider1.jpg');"></div>
+    </div>
 
-    <!-- HERO BANNER -->
-    <div class="mt-2"
-         style="
-            background-image:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position:center;
-            height: 330px;
-            border-radius: 14px;
-         ">
-        <div style="
-            background: rgba(0,0,0,.45);
-            height:100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            color:white;
-            font-size:36px;
-            font-weight:700;
-            border-radius: 14px;
-        ">
-            Cà phê chuẩn gu – Sảng khoái mỗi ngày
+    <!-- slide 2 -->
+    <div class="slide">
+        <div class="hero-left">
+            <div class="hero-tagline">Menu CafeOnline</div>
+            <h1>CÀ PHÊ SỮA ĐÁ<span>BẠC XỈU &amp; HƠN THẾ</span></h1>
+            <p>
+                Những món quen thuộc như <b>cà phê sữa đá</b>, <b>bạc xỉu</b>, <b>cacao nóng</b>...
+                được pha chế theo tỉ lệ riêng, giữ trọn hương vị cà phê Việt nhưng vẫn hiện đại,
+                dễ uống cho mọi lứa tuổi.
+            </p>
+            <a href="/menu" class="hero-btn">Chọn món yêu thích</a>
+        </div>
+        <div class="hero-right" style="background-image:url('/img/slider2.jpg');"></div>
+    </div>
+
+    <!-- slide 3 -->
+    <div class="slide">
+        <div class="hero-left">
+            <div class="hero-tagline">Không gian nâu vàng ấm áp</div>
+            <h1>GÓC NHỎ<span>CHO RIÊNG BẠN</span></h1>
+            <p>
+                Với tông nâu – vàng chủ đạo, CafeOnline mang lại cảm giác gần gũi, ấm cúng.
+                Dù bạn cần một góc làm việc yên tĩnh, hẹn hò hay tụ tập bạn bè,
+                CafeOnline luôn có chỗ dành cho bạn.
+            </p>
+            <a href="/stores" class="hero-btn">Tìm quán gần bạn</a>
+        </div>
+        <div class="hero-right" style="background-image:url('/img/slider3.jpg');"></div>
+    </div>
+
+    <!-- Nút điều hướng -->
+    <button class="slider-nav-btn prev"><i class="bi bi-chevron-left"></i></button>
+    <button class="slider-nav-btn next"><i class="bi bi-chevron-right"></i></button>
+</section>
+
+<!-- ===== CÂU CHUYỆN ===== -->
+<section class="story-section">
+    <div class="story-bg"></div>
+    <div class="story-overlay">
+        <div class="story-title">
+            CÂU CHUYỆN CafeOnline
         </div>
     </div>
+</section>
 
-    <!-- CATEGORY TAGS -->
-    <h3 class="mt-4">Danh mục</h3>
-
-    <div class="mt-2">
-        <a th:each="cate : ${categories}"
-           th:text="${cate.name}"
-           th:href="@{/category/{id}(id=${cate.id})}"
-           style="
-                background:#6d4c41;
-                color:white;
-                padding:8px 14px;
-                border-radius:12px;
-                margin-right:8px;
-                text-decoration:none;
-                display:inline-block;
-           ">
-        </a>
-    </div>
-
-    <!-- FEATURED PRODUCTS -->
-    <h3 class="mt-4">Sản phẩm nổi bật</h3>
-
-    <div class="row mt-3">
-        <div class="col-md-3 mb-3" th:each="p : ${products}">
-            <div style="
-                background:white;
-                border-radius:14px;
-                box-shadow:0 4px 12px rgba(0,0,0,0.15);
-                overflow:hidden;
-            ">
-
-                <img th:src="@{'/img/' + ${p.image}}"
-                     style="width:100%;height:180px;object-fit:cover;">
-
-                <div class="p-3">
-                    <h5 th:text="${p.name}"></h5>
-                    <p class="text-danger fw-bold" th:text="${p.price} + ' đ'"></p>
-
-                    <a th:href="@{/product/{id}(id=${p.id})}"
-                       class="btn"
-                       style="background:#6d4c41;color:white;width:100%;">
-                        Xem chi tiết
-                    </a>
+<!-- ===== PHA CHẾ & THỰC ĐƠN ===== -->
+<section class="home-grid-2">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <a href="/phache">
+                <div class="grid-card">
+                    <img src="/img/phache.jpg" alt="Pha chế CafeOnline">
+                    <div class="grid-label">PHA CHẾ</div>
                 </div>
-
-            </div>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="/menu">
+                <div class="grid-card">
+                    <img src="/img/thucdon.jpg" alt="Thực đơn CafeOnline">
+                    <div class="grid-label">THỰC ĐƠN</div>
+                </div>
+            </a>
         </div>
     </div>
+</section>
 
-</div>
+<!-- ===== TIN TỨC NỔI BẬT ===== -->
+<section class="news-highlight">
+    <div class="news-left">
+        <h3 class="section-heading">TIN TỨC NỔI BẬT</h3>
+        <p>
+            "Cà phê ngon nhất là khi được thưởng thức theo cách của riêng bạn."
+            CafeOnline chúc bạn một ngày tràn đầy năng lượng, với hương cà phê thơm
+            dịu và không gian ấm áp tại 25 Vũ Tông Phan.
+        </p>
+        <a href="/news" class="hero-btn" style="margin-top:20px;">Xem thêm</a>
+    </div>
+    <div class="news-right"></div>
+</section>
 
+<!-- ===== TUYỂN DỤNG ===== -->
+<section class="recruit-section">
+    <div class="recruit-bg"></div>
+    <div class="recruit-box">
+        <h3 class="section-heading mb-1">TUYỂN DỤNG CafeOnline</h3>
+        <p>
+            Bạn yêu cà phê, thích không gian ấm áp và muốn làm việc trong một đội ngũ trẻ trung? <br>
+            Hãy gia nhập gia đình <b>CafeOnline</b>! <br>
+            Chúng mình luôn tìm kiếm barista, phục vụ, và cộng tác viên sáng tạo nội dung.
+        </p>
+        <a href="/recruit" class="hero-btn">Xem vị trí đang tuyển</a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        const slides = document.querySelectorAll('.hero-slider .slide');
+        const prevBtn = document.querySelector('.hero-slider .prev');
+        const nextBtn = document.querySelector('.hero-slider .next');
+        let index = 0;
+        let timer = null;
+
+        function showSlide(i) {
+            slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+            index = i;
+        }
+        function next() { showSlide((index + 1) % slides.length); }
+        function prev() { showSlide((index - 1 + slides.length) % slides.length); }
+
+        prevBtn.addEventListener('click', () => { prev(); resetAuto(); });
+        nextBtn.addEventListener('click', () => { next(); resetAuto(); });
+
+        function resetAuto() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(next, 7000);
+        }
+        resetAuto();
+    })();
+</script>
+
 </body>
 </html>

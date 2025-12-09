@@ -29,8 +29,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // ⭐ Đăng nhập CHUẨN – LẤY USER ĐÚNG TỪ DATABASE ⭐
+    // ⭐ Đăng nhập
     public User login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
+    }
+
+    // ⭐⭐⭐ Quan trọng dành cho Review ⭐⭐⭐
+    // LẤY USER HIỆN TẠI dựa theo email trong Principal
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

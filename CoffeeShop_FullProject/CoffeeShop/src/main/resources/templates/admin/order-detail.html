@@ -8,125 +8,197 @@
 
     <style>
         body {
-            background-color: #f4eee3;
+            background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
 
+        /* SIDEBAR */
         .sidebar {
             height: 100vh;
             background-color: #3e2723;
             padding-top: 30px;
             position: fixed;
-            width: 220px;
+            width: 230px;
+            box-shadow: 3px 0 8px rgba(0,0,0,0.25);
         }
 
         .sidebar a {
             color: #f8ede3;
             display: block;
-            padding: 12px 20px;
+            padding: 14px 22px;
             text-decoration: none;
             font-size: 17px;
+            transition: 0.2s;
         }
 
         .sidebar a:hover {
             background-color: #5d4037;
-            border-radius: 6px;
+            padding-left: 28px;
         }
 
+        /* HEADER */
         .header-bar {
-            background-color: #795548;
+            background-color: #6d4c41;
             color: white;
             padding: 15px 25px;
             font-size: 22px;
             font-weight: bold;
-            margin-left: 220px;
+            margin-left: 230px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
         }
 
         .content {
-            margin-left: 240px;
-            padding: 20px;
+            margin-left: 250px;
+            padding: 25px;
         }
 
+        /* CARD STYLE */
+        .detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+        }
+
+        h4.section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4e342e;
+            margin-bottom: 18px;
+        }
+
+        /* STATUS */
         .status-badge {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 10px;
             font-weight: 600;
+            font-size: 14px;
         }
-
         .pending { background-color: #ffe082; }
         .completed { background-color: #c5e1a5; }
         .cancelled { background-color: #ef9a9a; }
 
+        .status-select {
+            background: #fff8f0;
+            border: 1px solid #bda79d;
+            color: #4e342e;
+            border-radius: 6px;
+        }
+
+        .btn-save {
+            background-color: #6d4c41;
+            color: white;
+            border-radius: 6px;
+            padding: 5px 12px;
+        }
+
+        .btn-back {
+            background-color: #795548;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 18px;
+        }
+        .btn-back:hover {
+            background-color: #6d4c41;
+        }
+
+        /* PRODUCT TABLE */
+        table thead {
+            background-color: #d7ccc8;
+            color: #4e342e;
+        }
         .item-img {
             width: 60px;
             height: 60px;
             object-fit: cover;
-            border-radius: 6px;
+            border-radius: 10px;
         }
+
+        tbody tr:hover {
+            background-color: #f0e9e4;
+        }
+
     </style>
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
+    <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
+    <a href="/admin/charts">📈 Biểu đồ thống kê</a>
     <a href="/admin/categories">📂 Quản lý danh mục</a>
     <a href="/admin/products">🥤 Quản lý sản phẩm</a>
     <a href="/admin/orders">📦 Quản lý đơn hàng</a>
     <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
 </div>
 
+<!-- HEADER -->
 <div class="header-bar">
     Chi tiết đơn hàng
 </div>
 
+<!-- CONTENT -->
 <div class="content">
 
-    <div class="card shadow p-4">
+    <div class="detail-card">
 
-        <!-- THÔNG TIN ĐƠN HÀNG -->
-        <h4 class="mb-3">Thông tin chung</h4>
+        <!-- ================= THÔNG TIN CHUNG ================= -->
+        <h4 class="section-title">📝 Thông tin chung</h4>
 
         <div class="row mb-4">
-            <div class="col-md-4">
+
+            <div class="col-md-4 mb-3">
                 <strong>Mã đơn hàng:</strong>
                 <p th:text="${order.id}"></p>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 mb-3">
                 <strong>Khách hàng:</strong>
                 <p th:text="${order.customerName}"></p>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 mb-3">
                 <strong>Ngày tạo:</strong>
-                <p th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></p>
+                <p th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></p>
             </div>
 
-            <div class="col-md-4">
+            <!-- TRẠNG THÁI + UPDATE -->
+            <div class="col-md-4 mb-3">
                 <strong>Trạng thái:</strong>
-                <p>
-                    <span class="status-badge"
-                          th:classappend="${order.status} == 'Pending' ? ' pending' :
-                                          ${order.status} == 'Completed' ? ' completed' :
-                                          ' cancelled'"
-                          th:text="${order.status}">
-                    </span>
-                </p>
+                <form method="post" action="/admin/orders/update-status" class="d-flex align-items-center mt-1">
+
+                    <input type="hidden" name="id" th:value="${order.id}">
+
+                    <select name="status" class="form-select status-select w-50 me-3">
+                        <option value="PENDING" th:selected="${order.status == 'PENDING'}">Đang xử lý</option>
+                        <option value="COMPLETED" th:selected="${order.status == 'COMPLETED'}">Hoàn thành</option>
+                        <option value="CANCELLED" th:selected="${order.status == 'CANCELLED'}">Đã hủy</option>
+                    </select>
+
+                    <button class="btn btn-save">Lưu</button>
+                </form>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 mb-3">
                 <strong>Tổng tiền:</strong>
                 <p class="text-danger fw-bold" th:text="${order.total} + ' đ'"></p>
             </div>
+
+            <div class="col-md-4 mb-3">
+                <strong>Phương thức thanh toán:</strong>
+                <p th:text="${order.paymentMethod}"></p>
+            </div>
+
         </div>
 
         <hr>
 
-        <!-- SẢN PHẨM TRONG ĐƠN -->
-        <h4 class="mt-4 mb-3">Sản phẩm trong đơn</h4>
+        <!-- ================= SẢN PHẨM TRONG ĐƠN ================= -->
+        <h4 class="section-title mt-4">🛒 Sản phẩm trong đơn</h4>
 
-        <table class="table table-bordered bg-white">
-            <thead class="table-secondary">
+        <table class="table table-bordered">
+            <thead>
             <tr>
                 <th>Ảnh</th>
                 <th>Tên sản phẩm</th>
@@ -137,25 +209,26 @@
             </thead>
 
             <tbody>
-            <tr th:each="i : ${orderItems}">
+            <tr th:each="i : ${items}">
                 <td>
-                    <img th:src="${i.product.imageUrl}" class="item-img">
+                    <img th:src="@{'/img/' + ${i.product.image}}" class="item-img">
                 </td>
 
                 <td th:text="${i.product.name}"></td>
 
-                <td th:text="${i.product.price} + ' đ'"></td>
+                <td th:text="${i.price} + ' đ'"></td>
 
                 <td th:text="${i.quantity}"></td>
 
                 <td class="text-danger fw-bold"
-                    th:text="${i.product.price * i.quantity} + ' đ'"></td>
+                    th:text="${i.price * i.quantity} + ' đ'"></td>
             </tr>
             </tbody>
 
         </table>
 
-        <a href="/admin/orders" class="btn btn-secondary mt-3">⬅ Quay lại</a>
+        <!-- BACK BUTTON -->
+        <a href="/admin/orders" class="btn btn-back mt-3">⬅ Quay lại</a>
 
     </div>
 

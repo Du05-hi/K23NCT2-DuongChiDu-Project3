@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,17 +28,20 @@ public class CartController {
     private ToppingRepository toppingRepository;
 
     @GetMapping("")
-    public String viewCart(Model model) {
+    public String viewCart(Model model, HttpSession session) {
+
+        double total = cartService.getTotal();
+
         model.addAttribute("items", cartService.getItems());
-        model.addAttribute("total", cartService.getTotal());
+        model.addAttribute("total", total);
         model.addAttribute("isEmpty", cartService.isEmpty());
+
+        // ⭐ THÊM DÒNG QUAN TRỌNG: LƯU TOTAL VÀO SESSION
+        session.setAttribute("cartTotal", total);
+
         return "user/cart";
     }
 
-    /**
-     * ========== HÀM ADD CŨ (KHÔNG XOÁ) ==========
-     * Dành cho những form chỉ có productId + quantity
-     */
     @PostMapping("/add")
     public String addToCart(
             @RequestParam("productId") Integer productId,

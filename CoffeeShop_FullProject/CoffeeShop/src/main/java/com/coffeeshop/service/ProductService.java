@@ -14,8 +14,13 @@ public interface ProductService {
 
     List<Product> findByCategory(Integer categoryId);
 
-    // ⭐ HÀM MỚI: Lấy sản phẩm theo category + phân trang
+    // ⭐ Lấy sản phẩm theo category + phân trang
     Page<Product> findByCategoryPaged(Integer categoryId, Pageable pageable);
+
+    // ⭐ HÀM MỚI – FILTER + SEARCH + SORT
+    Page<Product> filterByCategory(Integer categoryId, String keyword, String sort, Pageable pageable);
+
+    Page<Product> filterAll(String keyword, String sort, Pageable pageable);
 
     void save(Product product);
 
