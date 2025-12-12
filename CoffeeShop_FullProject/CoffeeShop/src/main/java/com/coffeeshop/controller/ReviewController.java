@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/review")
+@RequestMapping("/reviews")
 public class ReviewController {
 
     @Autowired
@@ -22,44 +22,58 @@ public class ReviewController {
     @Autowired
     private ProductService productService;
 
-    // ================== THÊM REVIEW ==================
+    // =====================
+    // ⭐ THÊM REVIEW
+    // =====================
     @PostMapping("/add")
     public String addReview(@RequestParam("productId") Integer productId,
                             @RequestParam("rating") Integer rating,
                             @RequestParam("comment") String comment,
                             HttpSession session) {
 
-        // Lấy user từ SESSION
         User currentUser = (User) session.getAttribute("currentUser");
 
-        // Nếu chưa đăng nhập → chuyển đến login
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
+        if (currentUser == null) return "redirect:/login";
 
-        // Lấy sản phẩm
         Product product = productService.findById(productId);
 
-        // Tạo review mới
         Review review = new Review();
         review.setRating(rating);
         review.setComment(comment);
         review.setUser(currentUser);
         review.setProduct(product);
 
-        // Lưu xuống DB
         reviewService.save(review);
 
-        // Quay lại trang chi tiết
         return "redirect:/product/" + productId;
     }
 
-    // ================== TRANG HIỂN THỊ TẤT CẢ ĐÁNH GIÁ ==================
+
+    // =====================
+    // ⭐ LỊCH SỬ ĐÁNH GIÁ CỦA USER
+    // =====================
+    @GetMapping("/history")
+    public String myReviews(Model model, HttpSession session) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null) return "redirect:/login";
+
+        model.addAttribute("reviews",
+                reviewService.findByUser(currentUser));
+
+        return "user/reviews-list";
+    }
+
+    // =====================
+    // ⭐ TẤT CẢ ĐÁNH GIÁ (FIX LỖI 404)
+    // =====================
     @GetMapping("/all")
-    public String listAllReviews(Model model) {
+    public String allReviews(Model model) {
 
         model.addAttribute("reviews", reviewService.findAllReviews());
 
-        return "user/review-list"; // View hiển thị danh sách Review
+
+        return "user/reviews-list";
     }
 }

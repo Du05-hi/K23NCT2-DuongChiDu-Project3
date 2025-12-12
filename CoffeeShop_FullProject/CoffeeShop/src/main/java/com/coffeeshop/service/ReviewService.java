@@ -2,6 +2,7 @@ package com.coffeeshop.service;
 
 import com.coffeeshop.model.Product;
 import com.coffeeshop.model.Review;
+import com.coffeeshop.model.User;
 import com.coffeeshop.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,17 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    /**
-     * Tính điểm trung bình số sao của sản phẩm
-     */
+    // ⭐⭐ LẤY REVIEW THEO USER (DÙNG CHO lịch sử đánh giá)
+    public List<Review> findByUser(User user) {
+        return reviewRepository.findByUserOrderByCreatedAtDesc(user);
+    }
+
+    // ⭐⭐ TRANG TẤT CẢ REVIEW (nếu bạn cần trang tổng)
+    public List<Review> findAllReviews() {
+        return reviewRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    // ⭐ Tính điểm trung bình số sao của sản phẩm
     public Double getAverageRating(Product product) {
         List<Review> reviews = getReviewsByProduct(product);
         if (reviews.isEmpty()) return 0.0;
@@ -36,15 +45,8 @@ public class ReviewService {
         return sum / reviews.size();
     }
 
-    /**
-     * Đếm số lượng đánh giá
-     */
+    // ⭐ Đếm số lượng đánh giá
     public int countByProduct(Product product) {
         return getReviewsByProduct(product).size();
-    }
-
-    // ⭐⭐⭐ THÊM MỚI: LẤY TẤT CẢ ĐÁNH GIÁ ĐỂ HIỂN THỊ TRANG /review/all ⭐⭐⭐
-    public List<Review> findAllReviews() {
-        return reviewRepository.findAllByOrderByCreatedAtDesc();
     }
 }

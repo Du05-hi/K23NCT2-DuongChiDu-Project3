@@ -11,26 +11,22 @@
             background-color: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
-
         h2.title {
             font-weight: 700;
             color: #4e342e;
         }
-
         .cart-card {
             background: #fff;
             padding: 28px;
             border-radius: 20px;
             box-shadow: 0 5px 18px rgba(0,0,0,0.15);
         }
-
         .cart-img {
             width: 95px;
             height: 95px;
             object-fit: cover;
             border-radius: 12px;
         }
-
         .btn-coffee {
             background-color: #6d4c41;
             color: white;
@@ -42,7 +38,6 @@
             background-color: #5d4037;
             color: white;
         }
-
         .btn-del {
             background-color: #c62828;
             color: white;
@@ -52,7 +47,6 @@
             background-color: #8b0000;
             color: white;
         }
-
         .qty-box {
             width: 50px;
             text-align: center;
@@ -60,21 +54,20 @@
             border: 1px solid #aaa;
             font-weight: 600;
         }
-
+        .coupon-box{
+            background:white;
+            padding:15px;
+            border-radius:10px;
+            box-shadow:0 3px 12px rgba(0,0,0,.12);
+        }
         table th {
             color: #5d4037;
             font-weight: 700;
         }
-
-        table tbody tr td {
-            vertical-align: middle;
-        }
-
         .price {
             color: #d32f2f;
             font-weight: 700;
         }
-
         .total-box {
             font-size: 22px;
             color: #4e342e;
@@ -85,19 +78,16 @@
 
 <body>
 
-<!-- NAVBAR -->
-<div th:replace="layout/navbar :: navbar"></div>
+<div th:replace="layout/header :: header"></div>
 
 <div class="container mt-4">
 
     <h2 class="title">🛒 Giỏ hàng của bạn</h2>
 
-    <!-- EMPTY CART -->
     <div class="alert alert-warning mt-3" th:if="${items == null or #lists.isEmpty(items)}">
-        Giỏ hàng đang trống. <a href="/" class="fw-bold">Tiếp tục mua hàng</a>
+        Giỏ hàng đang trống. <a th:href="@{/products}" class="fw-bold">Tiếp tục mua hàng</a>
     </div>
 
-    <!-- CART ITEMS -->
     <div class="cart-card mt-3" th:if="${items != null and !#lists.isEmpty(items)}">
 
         <table class="table align-middle">
@@ -113,69 +103,40 @@
 
             <tbody>
             <tr th:each="item : ${items}">
-
-                <!-- COL 1: IMAGE + NAME -->
                 <td>
                     <div class="d-flex align-items-center">
-
-                        <img th:src="@{'/img/' + ${item.product.image}}"
-                             class="cart-img me-3">
-
+                        <img th:src="@{'/img/' + ${item.product.image}}" class="cart-img me-3">
                         <div>
                             <div class="fw-bold" th:text="${item.product.name}"></div>
-
-                            <!-- OPTIONS -->
                             <div class="text-muted small mt-1">
                                 Size: <span th:text="${item.size}"></span> •
                                 Đường: <span th:text="${item.sugar}"></span> •
                                 Đá: <span th:text="${item.ice}"></span>
-                                <br>
-
-                                <span th:if="${!#lists.isEmpty(item.toppings)}">
-                                    Topping:
-                                    <span th:each="t,iter : ${item.toppings}">
-                                        <span th:text="${t.name}"></span>
-                                        <span th:if="${!iter.last}">, </span>
-                                    </span>
-                                </span>
                             </div>
-
                         </div>
                     </div>
                 </td>
 
-                <!-- GIÁ -->
                 <td class="price"
                     th:text="${#numbers.formatDecimal(item.product.price,0,'COMMA',0,'POINT')} + ' đ'"></td>
 
-                <!-- SỐ LƯỢNG -->
                 <td>
                     <input type="text" class="qty-box" th:value="${item.quantity}" readonly>
                 </td>
 
-                <!-- TẠM TÍNH -->
                 <td class="price"
                     th:text="${#numbers.formatDecimal(item.subTotal,0,'COMMA',0,'POINT')} + ' đ'"></td>
 
-                <!-- XÓA -->
                 <td>
                     <a th:href="@{/cart/remove(productId=${item.product.id})}"
                        class="btn btn-del btn-sm">Xóa</a>
                 </td>
-
             </tr>
             </tbody>
         </table>
 
-        <!-- TOTAL -->
-        <div class="text-end mt-3 total-box">
-            Tổng tiền:
-            <span class="price"
-                  th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' đ'"></span>
-        </div>
-
-        <!-- ⭐ THÊM: FORM ÁP MÃ GIẢM GIÁ ⭐ -->
-        <div class="mt-4">
+        <!-- =============== COUPON =============== -->
+        <div class="coupon-box mt-4">
 
             <form action="/coupon/apply" method="post" class="d-flex">
                 <input type="text" name="code" class="form-control me-2"
@@ -183,35 +144,44 @@
                 <button class="btn btn-coffee">Áp dụng</button>
             </form>
 
-            <!-- LỖI -->
-            <div th:if="${session.couponError != null}"
-                 class="text-danger mt-2"
-                 th:text="${session.couponError}">
+            <div th:if="${session.couponError!=null}" class="mt-2 text-danger fw-bold">
+                <span th:text="${session.couponError}"></span>
             </div>
 
-            <!-- HIỂN THỊ COUPON ĐÃ ÁP -->
-            <div th:if="${session.coupon != null}"
-                 class="text-success fw-bold mt-2">
-                ✔ Đã áp mã:
-                <span th:text="${session.coupon.code}"></span>
-                (-<span th:text="${session.coupon.discountValue}"></span>%)
-            </div>
-
-            <!-- TÍNH TIỀN SAU KHI GIẢM -->
-            <div th:if="${session.coupon != null}"
-                 class="mt-1 total-box">
-                Tổng sau giảm:
-                <span class="price"
-                      th:text="${#numbers.formatDecimal(total - (total * session.coupon.discountValue / 100),0,'COMMA',0,'POINT')} + ' đ'">
+            <div th:if="${session.coupon!=null}" class="mt-2">
+                <span class="text-success fw-bold">
+                    ✔ Mã: <span th:text="${session.coupon.code}"></span>
+                    (Giảm <span th:text="${session.coupon.discountValue}"></span>%)
                 </span>
+
+                <a href="/coupon/remove" class="btn btn-sm btn-outline-danger ms-2">
+                    Xóa mã
+                </a>
+
+                <div class="mt-2 text-success">
+                    Tổng sau giảm:
+                    <span class="price"
+                          th:text="${#numbers.formatDecimal(total - (total * session.coupon.discountValue / 100),0,'COMMA',0,'POINT')} + ' đ'">
+                    </span>
+                </div>
             </div>
+
         </div>
-        <!-- ⭐ END COUPON ⭐ -->
+        <!-- =============== END COUPON =============== -->
+
+        <div class="text-end mt-4 total-box">
+            Tổng tiền:
+            <span class="price"
+                  th:text="${session.coupon != null ?
+                #numbers.formatDecimal((total - (total * session.coupon.discountValue / 100)),0,'COMMA',0,'POINT')
+                : #numbers.formatDecimal(total,0,'COMMA',0,'POINT')}
+                + ' đ'">
+    </span>
+        </div>
 
 
-        <!-- BUTTONS -->
         <div class="d-flex justify-content-between mt-4">
-            <a href="/" class="btn btn-secondary">⬅ Tiếp tục mua hàng</a>
+            <a th:href="@{/products}" class="btn btn-secondary">⬅ Tiếp tục mua hàng</a>
 
             <a href="/checkout" class="btn btn-coffee">
                 Thanh toán ➜
@@ -222,6 +192,7 @@
 
 </div>
 
+<div th:replace="layout/footer :: footer"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

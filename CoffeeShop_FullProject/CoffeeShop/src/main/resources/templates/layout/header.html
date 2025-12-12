@@ -1,54 +1,155 @@
-<!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
+<!-- FILE: templates/layout/header.html -->
 
-<div th:fragment="header">
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="header">
 
-    <header class="cong-header shadow-sm"
-            style="background:#ffffff;position:sticky;top:0;z-index:1000;border-bottom:1px solid #eee;">
-        <div class="container d-flex align-items-center justify-content-between py-2">
+    <style>
+        /* ================================
+           NAVBAR PHONG CÁCH CỘNG CÀ PHÊ
+        ================================= */
 
-            <!-- LOGO + SLOGAN -->
-            <div class="d-flex flex-column">
-                <a href="/" class="text-decoration-none fw-bold"
-                   style="font-size:22px;color:#4a5a2c;letter-spacing:2px;text-transform:uppercase;">
-                    CafeOnline
-                </a>
-                <span style="font-size:11px;color:#a5722a;letter-spacing:1px;">
-                    "Cà phê theo cách của bạn"
-                </span>
-            </div>
+        /* ✨ ÉP TOÀN BỘ NAVBAR DÙNG 1 FONT ✨ */
+        .navbar, .navbar * {
+            font-family: "Courier New", monospace !important;
+        }
 
-            <!-- MENU DESKTOP -->
-            <nav class="d-none d-lg-block">
-                <ul class="list-unstyled d-flex mb-0" style="gap:24px;">
-                    <li><a href="/story"   class="text-decoration-none"
-                           style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#3b4621;">Câu chuyện</a></li>
-                    <li><a href="/news"    class="text-decoration-none"
-                           style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#3b4621;">Bảng tin</a></li>
-                    <li><a href="/menu"    class="text-decoration-none"
-                           style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#3b4621;">Thực đơn</a></li>
-                    <li><a href="/stores"  class="text-decoration-none"
-                           style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#3b4621;">Cửa hàng</a></li>
-                    <li><a href="/recruit" class="text-decoration-none"
-                           style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#3b4621;">Tuyển dụng</a></li>
+        nav.navbar{
+            background:#415738; /* xanh rêu đậm */
+            padding:18px 0;
+            box-shadow:0 3px 8px rgba(0,0,0,.15);
+        }
+
+        .navbar-brand{
+            font-weight:900;
+            font-size:28px;
+            color:#f6f3e7 !important;
+            letter-spacing:2px;
+        }
+
+        /* MENU */
+        .nav-link{
+            color:#f6f3e7 !important;
+            font-weight:600;
+            font-size:17px;
+            padding:10px 22px;
+            border-radius:10px;
+            transition:0.2s ease;
+        }
+
+        .nav-link:hover{
+            background:#6d4c41;
+            color:white !important;
+            transform:translateY(-2px);
+        }
+
+        /* DROPDOWN */
+        .dropdown-menu{
+            border-radius:10px;
+            background:#f8f2e9;
+            padding:0;
+            overflow:hidden;
+        }
+
+        .dropdown-item{
+            padding:12px 18px;
+            font-weight:600;
+            color:#4e342e;
+        }
+
+        .dropdown-item:hover{
+            background:#e0d4c3;
+        }
+
+        .navbar-toggler{
+            border:none;
+            background:#f6f3e7;
+            padding:6px 10px;
+            border-radius:8px;
+        }
+    </style>
+
+
+    <!-- ==========================
+         NAVBAR
+    =========================== -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+
+            <!-- LOGO BÊN TRÁI -->
+            <a class="navbar-brand" th:href="@{/}">
+                CAFEONLINE
+            </a>
+
+            <!-- NÚT MOBILE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- MENU GIỮA + USER BÊN PHẢI -->
+            <div class="collapse navbar-collapse" id="mainMenu">
+
+                <!-- MENU GIỮA -->
+                <ul class="navbar-nav mx-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Trang chủ</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/products}">Sản phẩm</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cart}">Giỏ hàng</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/my-orders}">Lịch sử đặt hàng</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reviews/all">Lịch sử đánh giá</a>
+                    </li>
+
                 </ul>
-            </nav>
 
-            <!-- ICON QUỐC KỲ -->
-            <span style="width:28px;height:28px;border-radius:50%;background:#ffdd00;
-                         display:flex;align-items:center;justify-content:center;
-                         font-size:11px;font-weight:700;color:#d0021b;">
-                VN
-            </span>
+                <!-- USER BÊN PHẢI -->
+                <ul class="navbar-nav ms-auto">
 
+                    <!-- CHƯA ĐĂNG NHẬP -->
+                    <li class="nav-item" th:if="${session.currentUser == null}">
+                        <a class="nav-link" th:href="@{/login}">Đăng nhập</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.currentUser == null}">
+                        <a class="nav-link" th:href="@{/register}">Đăng ký</a>
+                    </li>
+
+                    <!-- ĐÃ ĐĂNG NHẬP -->
+                    <li class="nav-item dropdown" th:if="${session.currentUser != null}">
+                        <a class="nav-link dropdown-toggle"
+                           data-bs-toggle="dropdown"
+                           th:text="${session.currentUser.fullName}">
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" th:href="@{/profile}">
+                                    Thông tin cá nhân
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/logout}">
+                                    Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
         </div>
-    </header>
+    </nav>
 
 </div>
-
-</body>
-</html>

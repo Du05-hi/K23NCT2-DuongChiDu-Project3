@@ -1,8 +1,6 @@
 package com.coffeeshop.service;
 
 import com.coffeeshop.model.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,13 +12,11 @@ public interface ProductService {
 
     List<Product> findByCategory(Integer categoryId);
 
-    // ⭐ Lấy sản phẩm theo category + phân trang
-    Page<Product> findByCategoryPaged(Integer categoryId, Pageable pageable);
+    // ⭐ Lọc theo category + keyword + sort (KHÔNG phân trang)
+    List<Product> filterByCategory(Integer categoryId, String keyword, String sort);
 
-    // ⭐ HÀM MỚI – FILTER + SEARCH + SORT
-    Page<Product> filterByCategory(Integer categoryId, String keyword, String sort, Pageable pageable);
-
-    Page<Product> filterAll(String keyword, String sort, Pageable pageable);
+    // ⭐ Lọc toàn bộ sản phẩm theo keyword + sort
+    List<Product> filterAll(String keyword, String sort);
 
     void save(Product product);
 

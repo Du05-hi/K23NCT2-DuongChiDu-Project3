@@ -2,80 +2,134 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Đơn hàng của tôi - CoffeeShop</title>
+    <title>Lịch sử đơn hàng | CafeOnline</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #f3ede3;
-            font-family: 'Segoe UI', sans-serif;
+        body{
+            background:#faf7f1;
+            font-family: "Courier New", monospace;
+            color:#3b362a;
         }
 
-        .navbar {
-            background-color: #4e342e !important;
+        h2{
+            color:#3d4f37; /* xanh rêu Cộng */
+            font-weight:800;
+            font-size:28px;
+            text-align:center;
+            letter-spacing:2px;
+            margin-bottom:20px;
         }
 
-        .navbar-brand, .nav-link {
-            color: white !important;
-            font-weight: 600;
+        /* ===== CARD ===== */
+        .order-card{
+            background:#ffffff;
+            border-radius:18px;
+            padding:28px;
+            border:1px solid #e6dfd3;
+            box-shadow:0 6px 20px rgba(0,0,0,0.12);
+            transition:0.25s ease;
+        }
+        .order-card:hover{
+            transform:translateY(-3px);
         }
 
-        .order-card {
-            background: white;
-            padding: 20px;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        /* ===== TABLE ===== */
+        table{
+            overflow:hidden;
+            border-radius:12px;
+            background:white;
+            border:1px solid #e3d8c8;
         }
 
-        .btn-coffee {
-            background-color: #6d4c41;
-            color: white;
-            font-weight: 600;
-        }
-        .btn-coffee:hover {
-            background-color: #5d4037;
+        thead{
+            background:#e8d7c4 !important;
+            color:#4a362c !important;
+            font-weight:700;
+            font-size:15px;
         }
 
-        .status {
-            font-weight: bold;
+        tbody tr{
+            background:#fdfbf7;
         }
-        .status-pending { color: #e65100; }
-        .status-completed { color: #2e7d32; }
-        .status-cancelled { color: #b71c1c; }
+        tbody tr:hover{
+            background:#f0e7dd !important;
+        }
+
+        /* ===== STATUS ===== */
+        .status{
+            font-weight:700;
+            padding:6px 12px;
+            border-radius:8px;
+            font-size:14px;
+        }
+        .status-pending{
+            background:#ffefcf;
+            color:#a66b00;
+            border:1px solid #e8c887;
+        }
+        .status-completed{
+            background:#e4f4e7;
+            color:#2e7d32;
+            border:1px solid #8cc499;
+        }
+        .status-cancelled{
+            background:#fde3e3;
+            color:#d32f2f;
+            border:1px solid #e9b1b1;
+        }
+
+        /* ===== BUTTON ===== */
+        .btn-coffee{
+            background:#415738;
+            color:white;
+            font-weight:700;
+            border-radius:10px;
+            padding:7px 16px;
+            transition:0.2s ease;
+            letter-spacing:1px;
+        }
+        .btn-coffee:hover{
+            background:#2e4129;
+            color:white;
+            transform:translateY(-2px);
+        }
+
+        /* Alert chưa có đơn */
+        .alert-warning {
+            background:#fff4d1;
+            border:1px solid #e3c98b;
+            color:#72540a;
+            font-weight:600;
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand" href="/">CoffeeShop</a>
-        <div>
-            <a class="nav-link d-inline-block" href="/cart">🛒 Giỏ hàng</a>
-            <a class="nav-link d-inline-block" href="/login">🔐 Đăng nhập</a>
-        </div>
-    </div>
-</nav>
+<!-- HEADER CAFEONLINE -->
+<div th:replace="layout/header :: header"></div>
 
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
 
-    <h2>Lịch sử đơn hàng</h2>
+    <h2>LỊCH SỬ ĐƠN HÀNG</h2>
 
-    <!-- NO ORDERS -->
+    <!-- CHƯA CÓ ĐƠN -->
     <div class="alert alert-warning mt-3"
          th:if="${orders == null or #lists.isEmpty(orders)}">
         Bạn chưa có đơn hàng nào.
-        <a href="/">Mua hàng ngay</a>
+        <a href="/" class="fw-bold">Mua hàng ngay</a>
     </div>
 
-    <!-- ORDER LIST -->
+    <!-- CÓ ĐƠN -->
     <div class="order-card mt-3"
          th:if="${orders != null and !#lists.isEmpty(orders)}">
 
         <table class="table table-bordered align-middle">
-            <thead class="table-light">
+            <thead>
             <tr>
                 <th>Mã đơn</th>
                 <th>Ngày đặt</th>
@@ -87,9 +141,14 @@
 
             <tbody>
             <tr th:each="o : ${orders}">
+
                 <td th:text="${o.id}"></td>
+
                 <td th:text="${#temporals.format(o.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td class="text-danger fw-bold" th:text="${o.total} + ' đ'"></td>
+
+                <td class="text-danger fw-bold"
+                    th:text="${#numbers.formatDecimal(o.total,0,'COMMA',0,'POINT')} + ' đ'">
+                </td>
 
                 <td class="status"
                     th:classappend="' status-' + ${o.status}">
@@ -97,15 +156,21 @@
                 </td>
 
                 <td>
-                    <a th:href="@{/my-orders/{id}(id=${o.id})}"
-                       class="btn btn-coffee btn-sm">Xem chi tiết</a>
+                    <a th:href="@{/my-order-detail(id=${o.id})}"
+                       class="btn btn-coffee btn-sm">
+                        Xem chi tiết
+                    </a>
                 </td>
+
             </tr>
             </tbody>
         </table>
 
     </div>
 </div>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
 
 </body>
 </html>

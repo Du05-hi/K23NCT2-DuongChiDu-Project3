@@ -161,7 +161,8 @@
                 từ cà phê sữa đá, bạc xỉu đến cacao nóng. Không gian ấm áp, nhẹ nhàng,
                 là nơi bạn bắt đầu ngày mới hoặc kết thúc một ngày dài thật thư giãn.
             </p>
-            <a href="/menu" class="hero-btn">Xem thực đơn</a>
+            <a th:href="@{/products}" class="hero-btn">Xem thực đơn</a>
+
         </div>
         <div class="hero-right" style="background-image:url('/img/slider1.jpg');"></div>
     </div>
@@ -176,7 +177,8 @@
                 được pha chế theo tỉ lệ riêng, giữ trọn hương vị cà phê Việt nhưng vẫn hiện đại,
                 dễ uống cho mọi lứa tuổi.
             </p>
-            <a href="/menu" class="hero-btn">Chọn món yêu thích</a>
+            <a th:href="@{/products}" class="hero-btn">Chọn Món Yêu Thích</a>
+
         </div>
         <div class="hero-right" style="background-image:url('/img/slider2.jpg');"></div>
     </div>
@@ -215,7 +217,7 @@
 <section class="home-grid-2">
     <div class="row g-4">
         <div class="col-md-6">
-            <a href="/phache">
+            <a th:href="@{/products}">
                 <div class="grid-card">
                     <img src="/img/phache.jpg" alt="Pha chế CafeOnline">
                     <div class="grid-label">PHA CHẾ</div>
@@ -223,7 +225,7 @@
             </a>
         </div>
         <div class="col-md-6">
-            <a href="/menu">
+            <a th:href="@{/products}">
                 <div class="grid-card">
                     <img src="/img/thucdon.jpg" alt="Thực đơn CafeOnline">
                     <div class="grid-label">THỰC ĐƠN</div>

@@ -7,123 +7,160 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+
+        /* ===================== GLOBAL ===================== */
         body {
             background-color: #f3ede3;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: "Courier New", monospace; /* ĐỒNG BỘ FONT */
+            color: #3b332d;
         }
 
-        /* SIDEBAR */
+        /* ===================== SIDEBAR ===================== */
         .sidebar {
             height: 100vh;
-            background-color: #3e2723;
-            padding-top: 30px;
+            background-color: #2f241e;
+            padding-top: 35px;
             position: fixed;
-            width: 230px;
-            box-shadow: 3px 0 8px rgba(0,0,0,0.25);
+            width: 240px;
+            box-shadow: 3px 0 12px rgba(0,0,0,0.28);
         }
 
         .sidebar a {
-            color: #f8ede3;
+            color: #f6efe5;
             display: block;
-            padding: 14px 22px;
+            padding: 14px 30px;
             text-decoration: none;
-            font-size: 17px;
-            transition: 0.2s;
+            font-size: 18px;
+            font-weight: 600;
+            transition: 0.25s ease;
         }
 
         .sidebar a:hover {
             background-color: #5d4037;
-            padding-left: 28px;
+            padding-left: 40px;
+            border-radius: 6px;
         }
 
-        /* HEADER */
+        /* ===================== HEADER ===================== */
         .header-bar {
             background-color: #6d4c41;
             color: white;
-            padding: 15px 25px;
-            font-size: 22px;
-            font-weight: bold;
-            margin-left: 230px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            padding: 20px 32px;
+            font-size: 24px;
+            font-weight: 900;
+            margin-left: 240px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            letter-spacing: 1px;
         }
 
+        /* ===================== CONTENT ===================== */
         .content {
-            margin-left: 250px;
-            padding: 25px;
+            margin-left: 260px;
+            padding: 30px;
         }
 
-        /* CARD STYLE */
+        /* ===================== DETAIL CARD ===================== */
         .detail-card {
             background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            transition: 0.2s;
         }
 
-        h4.section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #4e342e;
-            margin-bottom: 18px;
+        .detail-card:hover {
+            transform: translateY(-3px);
         }
 
-        /* STATUS */
-        .status-badge {
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
+        .section-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #3c2f28;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
         }
-        .pending { background-color: #ffe082; }
-        .completed { background-color: #c5e1a5; }
-        .cancelled { background-color: #ef9a9a; }
 
+        /* ===================== STATUS SELECT ===================== */
         .status-select {
             background: #fff8f0;
-            border: 1px solid #bda79d;
+            border: 1px solid #bba79c;
             color: #4e342e;
-            border-radius: 6px;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-weight: 600;
         }
 
         .btn-save {
-            background-color: #6d4c41;
-            color: white;
-            border-radius: 6px;
-            padding: 5px 12px;
+            background-color: #415738;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 6px 14px;
         }
 
+        .btn-save:hover {
+            background:#31422c;
+            transform: translateY(-2px);
+        }
+
+        /* ===================== BACK BUTTON ===================== */
         .btn-back {
-            background-color: #795548;
-            color: white;
-            border-radius: 6px;
-            padding: 8px 18px;
-        }
-        .btn-back:hover {
             background-color: #6d4c41;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
-        /* PRODUCT TABLE */
+        .btn-back:hover {
+            background:#4e3328;
+        }
+
+        /* ===================== TABLE ===================== */
+        table {
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 4px 12px rgba(0,0,0,.15);
+        }
+
         table thead {
             background-color: #d7ccc8;
             color: #4e342e;
+            font-weight:800;
+            font-size: 15px;
+            letter-spacing: 1px;
         }
-        .item-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 10px;
+
+        tbody tr {
+            background:#faf7f3;
+            transition: .25s;
         }
 
         tbody tr:hover {
-            background-color: #f0e9e4;
+            background:#f0e7dd;
+        }
+
+        .item-img {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #e7d8c7;
+            box-shadow: 0 2px 6px rgba(0,0,0,.12);
+        }
+
+        .text-danger {
+            font-weight: 900;
         }
 
     </style>
+
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+<!-- ============ SIDEBAR ============ -->
 <div class="sidebar">
     <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
     <a href="/admin/charts">📈 Biểu đồ thống kê</a>
@@ -133,17 +170,17 @@
     <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
 </div>
 
-<!-- HEADER -->
+<!-- ============ HEADER ============ -->
 <div class="header-bar">
     Chi tiết đơn hàng
 </div>
 
-<!-- CONTENT -->
+<!-- ============ CONTENT ============ -->
 <div class="content">
 
     <div class="detail-card">
 
-        <!-- ================= THÔNG TIN CHUNG ================= -->
+        <!-- THÔNG TIN CHUNG -->
         <h4 class="section-title">📝 Thông tin chung</h4>
 
         <div class="row mb-4">
@@ -160,17 +197,17 @@
 
             <div class="col-md-4 mb-3">
                 <strong>Ngày tạo:</strong>
-                <p th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></p>
+                <p th:text="${#temporals.format(order.orderDate,'dd/MM/yyyy HH:mm')}"></p>
             </div>
 
-            <!-- TRẠNG THÁI + UPDATE -->
-            <div class="col-md-4 mb-3">
+            <!-- TRẠNG THÁI -->
+            <div class="col-md-6 mb-3">
                 <strong>Trạng thái:</strong>
-                <form method="post" action="/admin/orders/update-status" class="d-flex align-items-center mt-1">
+                <form action="/admin/orders/update-status" method="post" class="d-flex align-items-center mt-1">
 
                     <input type="hidden" name="id" th:value="${order.id}">
 
-                    <select name="status" class="form-select status-select w-50 me-3">
+                    <select name="status" class="status-select w-50 me-3">
                         <option value="PENDING" th:selected="${order.status == 'PENDING'}">Đang xử lý</option>
                         <option value="COMPLETED" th:selected="${order.status == 'COMPLETED'}">Hoàn thành</option>
                         <option value="CANCELLED" th:selected="${order.status == 'CANCELLED'}">Đã hủy</option>
@@ -180,13 +217,13 @@
                 </form>
             </div>
 
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <strong>Tổng tiền:</strong>
-                <p class="text-danger fw-bold" th:text="${order.total} + ' đ'"></p>
+                <p class="text-danger" th:text="${order.total} + ' đ'"></p>
             </div>
 
-            <div class="col-md-4 mb-3">
-                <strong>Phương thức thanh toán:</strong>
+            <div class="col-md-3 mb-3">
+                <strong>Thanh toán:</strong>
                 <p th:text="${order.paymentMethod}"></p>
             </div>
 
@@ -194,14 +231,14 @@
 
         <hr>
 
-        <!-- ================= SẢN PHẨM TRONG ĐƠN ================= -->
+        <!-- SẢN PHẨM TRONG ĐƠN -->
         <h4 class="section-title mt-4">🛒 Sản phẩm trong đơn</h4>
 
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>Ảnh</th>
-                <th>Tên sản phẩm</th>
+                <th>Sản phẩm</th>
                 <th>Giá</th>
                 <th>Số lượng</th>
                 <th>Tạm tính</th>
@@ -210,24 +247,16 @@
 
             <tbody>
             <tr th:each="i : ${items}">
-                <td>
-                    <img th:src="@{'/img/' + ${i.product.image}}" class="item-img">
-                </td>
-
+                <td><img th:src="@{'/img/' + ${i.product.image}}" class="item-img"></td>
                 <td th:text="${i.product.name}"></td>
-
                 <td th:text="${i.price} + ' đ'"></td>
-
                 <td th:text="${i.quantity}"></td>
-
-                <td class="text-danger fw-bold"
-                    th:text="${i.price * i.quantity} + ' đ'"></td>
+                <td class="text-danger" th:text="${i.price * i.quantity} + ' đ'"></td>
             </tr>
             </tbody>
 
         </table>
 
-        <!-- BACK BUTTON -->
         <a href="/admin/orders" class="btn btn-back mt-3">⬅ Quay lại</a>
 
     </div>

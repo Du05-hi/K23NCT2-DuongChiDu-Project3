@@ -8,9 +8,6 @@ import com.coffeeshop.service.ProductService;
 import com.coffeeshop.service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,92 +34,71 @@ public class ProductController {
     private ReviewService reviewService;
 
 
-    // ===================== PRODUCT LIST + PAGINATION =====================
+    // ============================================================
+    // ⭐ HIỂN THỊ TẤT CẢ SẢN PHẨM — KHÔNG PHÂN TRANG
+    // ============================================================
     @GetMapping("/products")
-    public String listProducts(Model model,
-                               @RequestParam(defaultValue = "0") int page) {
+    public String listProducts(Model model) {
 
-        int pageSize = 8;
-        Pageable pageable = PageRequest.of(page, pageSize);
+        List<Product> products = productService.findAll();
 
-        Page<Product> productPage = productRepository.findAll(pageable);
-
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("page", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("products", products);
         model.addAttribute("categories", categoryRepository.findAll());
-
-        // ⭐ THÊM: TRUYỀN reviewService để view lấy rating
         model.addAttribute("reviewService", reviewService);
 
         return "user/product-list";
     }
 
 
-    // ===================== FILTER BY CATEGORY =====================
+    // ============================================================
+    // ⭐ XEM SẢN PHẨM THEO LOẠI — KHÔNG PHÂN TRANG
+    // ============================================================
     @GetMapping("/products/category/{id}")
     public String listByCategory(@PathVariable("id") Integer id,
-                                 @RequestParam(defaultValue = "0") int page,
                                  Model model) {
 
-        int pageSize = 8;
-        Pageable pageable = PageRequest.of(page, pageSize);
+        List<Product> products = productService.findByCategory(id);
 
-        Page<Product> productPage = productService.findByCategoryPaged(id, pageable);
-
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("page", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-
+        model.addAttribute("products", products);
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("categoryId", id);
-
-        // ⭐ THÊM: CHO VIEW TÍNH RATING
         model.addAttribute("reviewService", reviewService);
 
         return "user/product-list";
     }
 
 
-    // ===================== ⭐ FILTER + SEARCH + SORT =====================
+    // ============================================================
+    // ⭐ LỌC + TÌM KIẾM + SẮP XẾP — KHÔNG PHÂN TRANG
+    // ============================================================
     @GetMapping("/products/filter")
     public String filterProducts(Model model,
-                                 @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(required = false) Integer categoryId,
                                  @RequestParam(required = false) String keyword,
                                  @RequestParam(required = false) String sort) {
 
-        int pageSize = 8;
-        Pageable pageable = PageRequest.of(page, pageSize);
+        List<Product> products;
 
-        Page<Product> productPage;
-
-        // 1️⃣ Lọc theo Category
         if (categoryId != null) {
-            productPage = productService.filterByCategory(categoryId, keyword, sort, pageable);
+            products = productService.filterByCategory(categoryId, keyword, sort);
             model.addAttribute("categoryId", categoryId);
-        }
-        // 2️⃣ Tìm kiếm & sắp xếp toàn bộ
-        else {
-            productPage = productService.filterAll(keyword, sort, pageable);
+        } else {
+            products = productService.filterAll(keyword, sort);
         }
 
-        // Truyền dữ liệu về giao diện
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("page", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("products", products);
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("keyword", keyword);
         model.addAttribute("sort", sort);
-
-        // ⭐ THÊM: GIÚP VIEW DÙNG reviewService
         model.addAttribute("reviewService", reviewService);
 
         return "user/product-list";
     }
 
 
-    // ===================== PRODUCT DETAIL =====================
+    // ============================================================
+    // ⭐ CHI TIẾT SẢN PHẨM
+    // ============================================================
     @GetMapping("/product/{id}")
     public String detail(@PathVariable("id") Integer id, Model model) {
 
@@ -131,7 +107,7 @@ public class ProductController {
 
         model.addAttribute("product", product);
 
-        // ================= RELATED PRODUCTS =================
+        // ===== SẢN PHẨM LIÊN QUAN =====
         if (product.getCategory() != null) {
 
             List<Product> related =
@@ -144,10 +120,10 @@ public class ProductController {
             model.addAttribute("related", related);
         }
 
-        // ================= TOPPINGS =================
+        // ===== TOPPINGS =====
         model.addAttribute("toppings", toppingRepository.findAll());
 
-        // ================= REVIEWS =================
+        // ===== REVIEW =====
         model.addAttribute("reviews", reviewService.getReviewsByProduct(product));
         model.addAttribute("avgRating", reviewService.getAverageRating(product));
         model.addAttribute("reviewCount", reviewService.countByProduct(product));

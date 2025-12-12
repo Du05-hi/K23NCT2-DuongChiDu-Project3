@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>Tất cả đánh giá khách hàng</title>
@@ -13,73 +12,50 @@
             background: #f3ede3;
             font-family: 'Segoe UI', sans-serif;
         }
-
-        .review-card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        .review-card{
+            background:white;border-radius:12px;
+            padding:20px;margin-bottom:15px;
+            box-shadow:0 3px 10px rgba(0,0,0,.12);
         }
-
-        .review-stars {
-            font-size: 20px;
-            color: #ffa000;
-        }
-
-        .product-name {
-            font-weight: bold;
-            color: #6d4c41;
-        }
-
-        .section-title {
-            font-weight: 700;
-            color: #4e342e;
-        }
+        .review-stars{font-size:20px;color:#ffa000;}
+        .product-name{font-weight:bold;color:#6d4c41;}
+        .section-title{font-weight:700;color:#4e342e;}
     </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div th:replace="layout/navbar :: navbar"></div>
+<div th:replace="layout/header :: header"></div>
 
 <div class="container mt-4">
 
-    <h2 class="section-title mb-4">💬 Tất cả đánh giá của khách hàng</h2>
+    <h2 class="section-title mb-4">💬 Tất cả đánh giá</h2>
 
-    <!-- Nếu không có đánh giá -->
     <div th:if="${#lists.isEmpty(reviews)}">
         <p class="text-muted">Chưa có đánh giá nào.</p>
     </div>
 
-    <!-- Danh sách các đánh giá -->
     <div th:each="rv : ${reviews}" class="review-card">
 
-        <!-- Số sao -->
         <div class="review-stars mb-2">
             <span th:each="i : ${#numbers.sequence(1, rv.rating)}">⭐</span>
         </div>
 
-        <!-- Tên sản phẩm -->
         <div class="product-name mb-1">
             <span th:text="'Sản phẩm: ' + ${rv.product.name}"></span>
         </div>
 
-        <!-- Nội dung bình luận -->
-        <p class="mt-2 mb-1" th:text="${rv.comment}"></p>
+        <p th:text="${rv.comment}"></p>
 
-        <!-- Tên khách hàng -->
-        <small class="fw-bold" th:text="'Khách hàng: ' + ${rv.user.fullName}"></small>
-        <br>
+        <small class="fw-bold" th:text="'Khách hàng: ' + ${rv.user.fullName}"></small><br>
 
-        <!-- Thời gian -->
         <small class="text-muted"
                th:text="${#temporals.format(rv.createdAt, 'dd/MM/yyyy HH:mm')}"></small>
 
     </div>
-
 </div>
+
+<div th:replace="layout/footer :: footer"></div>
 
 </body>
 </html>
