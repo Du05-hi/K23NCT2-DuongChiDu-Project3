@@ -3,7 +3,9 @@ package com.coffeeshop.repository;
 import com.coffeeshop.model.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CouponRepository extends JpaRepository<Coupon, Integer> {
+import java.util.Optional;
 
-    Coupon findByCode(String code);
+public interface CouponRepository extends JpaRepository<Coupon, Long> {
+    Optional<Coupon> findByCode(String code);
+    boolean existsByCode(String code);
 }

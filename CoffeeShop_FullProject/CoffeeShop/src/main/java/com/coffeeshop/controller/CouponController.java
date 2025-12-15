@@ -2,36 +2,44 @@ package com.coffeeshop.controller;
 
 import com.coffeeshop.model.Coupon;
 import com.coffeeshop.service.CouponService;
-import jakarta.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/coupon")
 public class CouponController {
 
-    @Autowired
-    private CouponService couponService;
+    private final CouponService couponService;
 
+    public CouponController(CouponService couponService) {
+        this.couponService = couponService;
+    }
+
+    /**
+     * Áp mã giảm giá khi checkout
+     * URL: /coupon/apply
+     */
     @PostMapping("/apply")
     public String applyCoupon(@RequestParam("code") String code,
-                              HttpSession session) {
-
-        Double total = (Double) session.getAttribute("cartTotal"); // tổng giỏ hàng
+                              @RequestParam("total") Double total,
+                              Model model) {
 
         Coupon coupon = couponService.checkValidCoupon(code, total);
 
         if (coupon == null) {
-            session.setAttribute("couponError", "Mã giảm giá không hợp lệ!");
-            return "redirect:/cart";
+            model.addAttribute("couponError", "Mã giảm giá không hợp lệ");
+            model.addAttribute("total", total);
+            return "user/checkout";
         }
 
-        // Lưu vào session
-        session.setAttribute("coupon", coupon);
-        session.setAttribute("discount", coupon.getDiscountValue());
+        double discount = total * coupon.getDiscountValue() / 100;
+        double finalTotal = total - discount;
 
-        return "redirect:/cart";
+        model.addAttribute("coupon", coupon);
+        model.addAttribute("discount", discount);
+        model.addAttribute("finalTotal", finalTotal);
+
+        return "user/checkout";
     }
 }

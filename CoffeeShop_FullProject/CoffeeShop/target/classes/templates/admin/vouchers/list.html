@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý voucher | Admin CoffeeShop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f3ede3;
+            font-family: "Courier New", monospace;
+            color: #3b322b;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            height: 100vh;
+            background-color: #2f241e;
+            padding-top: 30px;
+            position: fixed;
+            width: 240px;
+        }
+        .sidebar a {
+            color: #f6efe5;
+            display: block;
+            padding: 14px 30px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+        .sidebar a:hover {
+            background-color: #5d4037;
+            border-radius: 8px;
+            padding-left: 42px;
+        }
+
+        /* HEADER */
+        .header-bar {
+            background-color: #6d4c41;
+            color: white;
+            padding: 18px 30px;
+            font-size: 22px;
+            font-weight: 900;
+            margin-left: 240px;
+        }
+
+        /* CONTENT */
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .card-box {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.18);
+        }
+
+        .badge-code {
+            background: #d7c9a3;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-weight: 900;
+        }
+
+        .status-active {
+            color: #2e7d32;
+            font-weight: 900;
+        }
+
+        .status-inactive {
+            color: #c62828;
+            font-weight: 900;
+        }
+
+        .btn-add {
+            background-color: #415738;
+            color: white;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 8px 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
+    <a href="/admin/charts">📈 Biểu đồ thống kê</a>
+    <a href="/admin/categories">📂 Quản lý danh mục</a>
+    <a href="/admin/products">🥤 Quản lý sản phẩm</a>
+
+    <!-- GIỮ /admin/vouchers -->
+    <a href="/admin/vouchers">🎁 Quản lý voucher</a>
+
+    <a href="/admin/orders">📦 Quản lý đơn hàng</a>
+    <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
+</div>
+
+
+<!-- HEADER -->
+<div class="header-bar">
+    🎁 Quản lý voucher
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold">Danh sách voucher</h4>
+        <a href="/admin/vouchers/create" class="btn btn-add">➕ Thêm voucher</a>
+    </div>
+
+    <div class="card-box">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Giảm (%)</th>
+                <th>Đơn tối thiểu</th>
+                <th>Hết hạn</th>
+                <th>Trạng thái</th>
+                <th width="160">Thao tác</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="v : ${vouchers}">
+                <td><span class="badge-code" th:text="${v.code}"></span></td>
+                <td th:text="${v.discountValue}"></td>
+                <td th:text="${v.minOrder}"></td>
+                <td th:text="${v.expiredAt}"></td>
+
+                <td>
+                    <span th:if="${v.status == 'ACTIVE'}" class="status-active">ACTIVE</span>
+                    <span th:if="${v.status != 'ACTIVE'}" class="status-inactive">INACTIVE</span>
+                </td>
+
+                <td>
+                    <a th:href="@{/admin/vouchers/edit/{id}(id=${v.id})}"
+                       class="btn btn-sm btn-warning">Sửa</a>
+
+                    <a th:href="@{/admin/vouchers/delete/{id}(id=${v.id})}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Xóa voucher này?')">Xóa</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

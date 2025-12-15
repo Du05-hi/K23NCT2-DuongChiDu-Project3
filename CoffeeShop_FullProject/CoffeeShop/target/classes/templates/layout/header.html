@@ -1,44 +1,64 @@
 <!-- FILE: templates/layout/header.html -->
-
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="header">
 
     <style>
         /* ================================
-           NAVBAR PHONG CÁCH CỘNG CÀ PHÊ
+           HEADER – TONE CỘNG CÀ PHÊ (GỌN)
         ================================= */
 
-        /* ✨ ÉP TOÀN BỘ NAVBAR DÙNG 1 FONT ✨ */
+        /* FONT */
         .navbar, .navbar * {
             font-family: "Courier New", monospace !important;
         }
 
+        /* NAVBAR */
         nav.navbar{
-            background:#415738; /* xanh rêu đậm */
-            padding:18px 0;
-            box-shadow:0 3px 8px rgba(0,0,0,.15);
+            background:#415738; /* xanh rêu */
+            padding:8px 0;      /* GỌN */
+            box-shadow:0 2px 6px rgba(0,0,0,.15);
         }
 
+        /* LOGO */
         .navbar-brand{
             font-weight:900;
-            font-size:28px;
+            font-size:24px;
             color:#f6f3e7 !important;
-            letter-spacing:2px;
+            letter-spacing:1.5px;
         }
 
-        /* MENU */
+        /* MENU CHUNG */
         .nav-link{
             color:#f6f3e7 !important;
             font-weight:600;
-            font-size:17px;
-            padding:10px 22px;
-            border-radius:10px;
-            transition:0.2s ease;
+            font-size:15px;
+            padding:6px 14px;
+            border-radius:8px;
+            transition:all .2s ease;
         }
 
         .nav-link:hover{
             background:#6d4c41;
             color:white !important;
-            transform:translateY(-2px);
+            transform:translateY(-1px);
+        }
+
+        /* ================================
+           🎁 SĂN MÃ VOUCHER (NỔI NHẸ)
+        ================================= */
+        .voucher-link{
+            background:#d7c9a3;       /* màu giấy cũ */
+            color:#3e2723 !important;
+            font-weight:800;
+            border-radius:14px;
+            padding:6px 14px !important;
+            font-size:14px;
+            box-shadow:0 2px 6px rgba(0,0,0,.2);
+        }
+
+        .voucher-link:hover{
+            background:#c5b27f;
+            color:#2f1f16 !important;
+            transform:translateY(-1px);
         }
 
         /* DROPDOWN */
@@ -47,26 +67,28 @@
             background:#f8f2e9;
             padding:0;
             overflow:hidden;
+            box-shadow:0 4px 10px rgba(0,0,0,.2);
         }
 
         .dropdown-item{
-            padding:12px 18px;
+            padding:10px 16px;
             font-weight:600;
             color:#4e342e;
+            font-size:14px;
         }
 
         .dropdown-item:hover{
             background:#e0d4c3;
         }
 
+        /* MOBILE */
         .navbar-toggler{
             border:none;
             background:#f6f3e7;
-            padding:6px 10px;
-            border-radius:8px;
+            padding:4px 8px;
+            border-radius:6px;
         }
     </style>
-
 
     <!-- ==========================
          NAVBAR
@@ -74,22 +96,23 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container">
 
-            <!-- LOGO BÊN TRÁI -->
+            <!-- LOGO -->
             <a class="navbar-brand" th:href="@{/}">
                 CAFEONLINE
             </a>
 
-            <!-- NÚT MOBILE -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            <!-- MOBILE BUTTON -->
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
                     data-bs-target="#mainMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- MENU GIỮA + USER BÊN PHẢI -->
+            <!-- MENU -->
             <div class="collapse navbar-collapse" id="mainMenu">
 
                 <!-- MENU GIỮA -->
-                <ul class="navbar-nav mx-auto">
+                <ul class="navbar-nav mx-auto align-items-center">
 
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/}">Trang chủ</a>
@@ -100,21 +123,30 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link voucher-link" th:href="@{/vouchers}">
+                            Săn mã voucher
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" th:href="@{/cart}">Giỏ hàng</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/my-orders}">Lịch sử đặt hàng</a>
+                        <a class="nav-link" th:href="@{/my-orders}">
+                            Lịch sử đặt hàng
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/reviews/all">Lịch sử đánh giá</a>
+                        <a class="nav-link" href="/reviews/all">
+                            Lịch sử đánh giá
+                        </a>
                     </li>
-
                 </ul>
 
-                <!-- USER BÊN PHẢI -->
-                <ul class="navbar-nav ms-auto">
+                <!-- USER -->
+                <ul class="navbar-nav ms-auto align-items-center">
 
                     <!-- CHƯA ĐĂNG NHẬP -->
                     <li class="nav-item" th:if="${session.currentUser == null}">
@@ -132,7 +164,7 @@
                            th:text="${session.currentUser.fullName}">
                         </a>
 
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <li>
                                 <a class="dropdown-item" th:href="@{/profile}">
                                     Thông tin cá nhân

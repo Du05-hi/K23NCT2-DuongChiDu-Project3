@@ -2,153 +2,157 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm / Sửa sản phẩm | Admin CoffeeShop</title>
+    <title>Thêm / Sửa voucher | Admin CoffeeShop</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-
         body {
             background-color: #f3ede3;
             font-family: "Courier New", monospace;
             color: #3b322b;
         }
 
-        /* SIDEBAR */
+        /* ========== SIDEBAR ========== */
         .sidebar {
             height: 100vh;
             background-color: #2f241e;
-            padding-top: 35px;
+            padding-top: 30px;
             position: fixed;
             width: 240px;
-            box-shadow: 3px 0 12px rgba(0,0,0,0.25);
         }
         .sidebar a {
             color: #f6efe5;
             display: block;
-            padding: 16px 32px;
+            padding: 14px 30px;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: bold;
             transition: .25s;
         }
         .sidebar a:hover {
             background-color: #5d4037;
-            padding-left: 45px;
             border-radius: 8px;
+            padding-left: 42px;
         }
 
-        /* HEADER */
+        /* ========== HEADER ========== */
         .header-bar {
             background-color: #6d4c41;
             color: white;
-            padding: 20px 32px;
-            font-size: 24px;
+            padding: 18px 30px;
+            font-size: 22px;
             font-weight: 900;
-            letter-spacing: 1px;
             margin-left: 240px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
 
-        /* CONTENT */
+        /* ========== CONTENT ========== */
         .content {
             margin-left: 260px;
-            padding: 35px;
+            padding: 30px;
         }
 
-        .card-coffee {
+        .card-box {
             background: white;
+            border-radius: 16px;
             padding: 30px;
-            border-radius: 18px;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 16px rgba(0,0,0,.18);
         }
 
         label {
             font-weight: 700;
-            color: #4e3a32;
         }
 
-        /* BUTTON */
         .btn-save {
             background-color: #415738;
             color: white;
             font-weight: 700;
-            padding: 8px 20px;
             border-radius: 10px;
+            padding: 8px 18px;
         }
-        .btn-save:hover {
-            background-color: #2f402a;
-            transform: translateY(-2px);
-        }
-
     </style>
-
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+<!-- ================= SIDEBAR ================= -->
 <div class="sidebar">
     <a href="/admin/dashboard">📊 Thống kê hệ thống</a>
     <a href="/admin/charts">📈 Biểu đồ thống kê</a>
     <a href="/admin/categories">📂 Quản lý danh mục</a>
     <a href="/admin/products">🥤 Quản lý sản phẩm</a>
+
+    <!-- Coupon backend – Voucher UI -->
     <a href="/admin/vouchers">🎁 Quản lý voucher</a>
+
     <a href="/admin/orders">📦 Quản lý đơn hàng</a>
     <a href="/" class="text-danger mt-3">⬅ Về trang chủ</a>
 </div>
 
-<!-- HEADER -->
+<!-- ================= HEADER ================= -->
 <div class="header-bar">
-    Thêm / Sửa sản phẩm
+    🎁 Thêm / Sửa voucher
 </div>
 
-<!-- CONTENT -->
+<!-- ================= CONTENT ================= -->
 <div class="content">
+    <div class="card-box">
 
-    <div class="card-coffee">
-
-        <form th:action="@{/admin/products/save}" th:object="${product}" method="post">
+        <form th:action="@{/admin/vouchers/save}"
+              th:object="${voucher}"
+              method="post">
 
             <input type="hidden" th:field="*{id}">
 
             <div class="mb-3">
-                <label class="form-label">Tên sản phẩm</label>
-                <input type="text" th:field="*{name}" class="form-control" required>
+                <label>Mã voucher</label>
+                <input type="text"
+                       th:field="*{code}"
+                       class="form-control"
+                       placeholder="VD: COFFEE10"
+                       required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Giá</label>
-                <input type="number" th:field="*{price}" class="form-control" required>
+                <label>Giảm (%)</label>
+                <input type="number"
+                       th:field="*{discountValue}"
+                       class="form-control"
+                       placeholder="VD: 10"
+                       required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Ảnh (tên file trong /static/img)</label>
-                <input type="text" th:field="*{image}" class="form-control" placeholder="vd: tra-vai.jpg" required>
-                <small class="text-muted">Ảnh lưu tại: <b>src/main/resources/static/img</b></small>
+                <label>Đơn tối thiểu</label>
+                <input type="number"
+                       th:field="*{minOrder}"
+                       class="form-control"
+                       placeholder="VD: 100000">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Mô tả</label>
-                <textarea th:field="*{description}" class="form-control" rows="4"></textarea>
+                <label>Ngày hết hạn</label>
+                <input type="date"
+                       th:field="*{expiredAt}"
+                       class="form-control"
+                       required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Danh mục</label>
-                <select th:field="*{category.id}" class="form-select" required>
-                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                <label>Trạng thái</label>
+                <select th:field="*{status}" class="form-select">
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
                 </select>
             </div>
 
             <button class="btn btn-save">💾 Lưu</button>
-            <a href="/admin/products" class="btn btn-secondary">⬅ Trở về</a>
+            <a href="/admin/vouchers" class="btn btn-secondary">⬅ Trở về</a>
 
         </form>
 
     </div>
-
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
