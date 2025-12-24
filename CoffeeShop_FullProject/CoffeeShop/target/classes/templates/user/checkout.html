@@ -92,6 +92,7 @@
 
     <div class="row mt-3">
 
+        <!-- ================= LEFT: FORM ================= -->
         <div class="col-md-7">
             <div class="checkout-card">
 
@@ -166,8 +167,7 @@
 
                     <div class="form-check pay-option mt-3">
                         <input class="form-check-input" type="radio" name="paymentMethod"
-                               value="VISA" data-bs-toggle="collapse"
-                               data-bs-target="#visaBox">
+                               value="VISA" data-bs-toggle="collapse" data-bs-target="#visaBox">
                         <label class="form-check-label">
                             <img src="/img/visa.png" class="pay-icon">
                             Thẻ VISA
@@ -194,6 +194,7 @@
             </div>
         </div>
 
+        <!-- ================= RIGHT: SUMMARY ================= -->
         <div class="col-md-5">
             <div class="summary-box">
 
@@ -207,22 +208,43 @@
                         </span>
 
                         <span class="price"
-                              th:text="${item.product.price * item.quantity} + ' đ'">
+                              th:text="${#numbers.formatDecimal(item.subTotal,0,'COMMA',0,'POINT')} + ' đ'">
                         </span>
                     </div>
                 </div>
 
                 <hr>
 
-                <h4 class="text-end mt-4">
-                    Tổng:
+                <!-- TẠM TÍNH -->
+                <div class="d-flex justify-content-between">
+                    <span>Tạm tính:</span>
                     <span class="price"
-                          th:text="${session.coupon != null ?
-                    (total - (total * session.coupon.discountValue / 100))
-                    : total} + ' đ'">
-    </span>
-                </h4>
+                          th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' đ'">
+                    </span>
+                </div>
 
+                <!-- GIẢM GIÁ (NẾU ĐÃ ÁP Ở CART) -->
+                <div class="d-flex justify-content-between text-success"
+                     th:if="${session.cartDiscount != null}">
+                    <span>Giảm giá:</span>
+                    <span>
+                        - <span th:text="${#numbers.formatDecimal(session.cartDiscount,0,'COMMA',0,'POINT')}"></span> đ
+                    </span>
+                </div>
+
+                <hr>
+
+                <!-- TỔNG THANH TOÁN -->
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Thanh toán:</span>
+                    <span class="price"
+                          th:text="${#numbers.formatDecimal(
+                                session.cartFinalTotal != null
+                                ? session.cartFinalTotal
+                                : total,
+                                0,'COMMA',0,'POINT')} + ' đ'">
+                    </span>
+                </div>
 
             </div>
         </div>

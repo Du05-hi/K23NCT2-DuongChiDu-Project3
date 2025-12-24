@@ -85,7 +85,8 @@
     <h2 class="title">🛒 Giỏ hàng của bạn</h2>
 
     <div class="alert alert-warning mt-3" th:if="${items == null or #lists.isEmpty(items)}">
-        Giỏ hàng đang trống. <a th:href="@{/products}" class="fw-bold">Tiếp tục mua hàng</a>
+        Giỏ hàng đang trống.
+        <a th:href="@{/products}" class="fw-bold">Tiếp tục mua hàng</a>
     </div>
 
     <div class="cart-card mt-3" th:if="${items != null and !#lists.isEmpty(items)}">
@@ -138,30 +139,33 @@
         <!-- =============== COUPON =============== -->
         <div class="coupon-box mt-4">
 
-            <form action="/coupon/apply" method="post" class="d-flex">
+            <!-- CHỈ ĐỔI ACTION -->
+            <form action="/coupon/apply-cart" method="post" class="d-flex">
                 <input type="text" name="code" class="form-control me-2"
                        placeholder="Nhập mã giảm giá...">
                 <button class="btn btn-coffee">Áp dụng</button>
             </form>
 
-            <div th:if="${session.couponError!=null}" class="mt-2 text-danger fw-bold">
-                <span th:text="${session.couponError}"></span>
+            <!-- THÔNG BÁO -->
+            <div th:if="${couponError!=null}" class="mt-2 text-danger fw-bold">
+                <span th:text="${couponError}"></span>
             </div>
 
-            <div th:if="${session.coupon!=null}" class="mt-2">
-                <span class="text-success fw-bold">
-                    ✔ Mã: <span th:text="${session.coupon.code}"></span>
-                    (Giảm <span th:text="${session.coupon.discountValue}"></span>%)
-                </span>
+            <div th:if="${couponSuccess!=null}" class="mt-2 text-success fw-bold">
+                <span th:text="${couponSuccess}"></span>
+            </div>
 
-                <a href="/coupon/remove" class="btn btn-sm btn-outline-danger ms-2">
-                    Xóa mã
-                </a>
+            <!-- HIỂN THỊ GIẢM GIÁ NGAY DƯỚI Ô NHẬP -->
+            <div th:if="${session.cartDiscount!=null}" class="mt-3">
+                <div class="text-success fw-bold">
+                    Giảm giá:
+                    - <span th:text="${#numbers.formatDecimal(session.cartDiscount,0,'COMMA',0,'POINT')}"></span> đ
+                </div>
 
-                <div class="mt-2 text-success">
+                <div class="mt-1">
                     Tổng sau giảm:
                     <span class="price"
-                          th:text="${#numbers.formatDecimal(total - (total * session.coupon.discountValue / 100),0,'COMMA',0,'POINT')} + ' đ'">
+                          th:text="${#numbers.formatDecimal(session.cartFinalTotal,0,'COMMA',0,'POINT')} + ' đ'">
                     </span>
                 </div>
             </div>
@@ -169,16 +173,16 @@
         </div>
         <!-- =============== END COUPON =============== -->
 
+        <!-- TỔNG TIỀN (GIỮ NGUYÊN UI – CHỈ ĐỔI LOGIC) -->
         <div class="text-end mt-4 total-box">
             Tổng tiền:
             <span class="price"
-                  th:text="${session.coupon != null ?
-                #numbers.formatDecimal((total - (total * session.coupon.discountValue / 100)),0,'COMMA',0,'POINT')
+                  th:text="${session.cartFinalTotal != null ?
+                #numbers.formatDecimal(session.cartFinalTotal,0,'COMMA',0,'POINT')
                 : #numbers.formatDecimal(total,0,'COMMA',0,'POINT')}
                 + ' đ'">
-    </span>
+            </span>
         </div>
-
 
         <div class="d-flex justify-content-between mt-4">
             <a th:href="@{/products}" class="btn btn-secondary">⬅ Tiếp tục mua hàng</a>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tuyển dụng | CafeOnline</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+        body{
+            background:#f3efe4;
+            font-family:'Courier New', monospace;
+        }
+
+        .page-title{
+            font-weight:900;
+            color:#3e2723;
+        }
+
+        .recruit-card{
+            background:#fff;
+            border-radius:18px;
+            padding:22px;
+            box-shadow:0 4px 14px rgba(0,0,0,.15);
+            transition:.2s;
+        }
+
+        .recruit-card:hover{
+            transform:translateY(-4px);
+        }
+
+        .job-title{
+            font-size:20px;
+            font-weight:800;
+            color:#4e342e;
+        }
+
+        .job-info{
+            font-size:14px;
+            color:#555;
+        }
+
+        .job-tag{
+            background:#415738;
+            color:white;
+            font-size:12px;
+            padding:4px 10px;
+            border-radius:10px;
+            display:inline-block;
+            margin-right:6px;
+        }
+
+        .btn-apply{
+            background:#6d4c41;
+            color:white;
+            font-weight:700;
+            border-radius:14px;
+            padding:8px 18px;
+            border:none;
+        }
+
+        .btn-apply:hover{
+            background:#4e342e;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container mt-4 mb-5">
+
+    <!-- TITLE -->
+    <div class="text-center mb-4">
+        <h2 class="page-title">💼 TUYỂN DỤNG</h2>
+        <p class="text-muted">Gia nhập đội ngũ CafeOnline – Cùng nhau phát triển</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- JOB ITEM -->
+        <div class="col-md-4">
+            <div class="recruit-card">
+                <div class="job-title">Nhân viên pha chế (Barista)</div>
+
+                <div class="job-info mt-2">
+                    <span class="job-tag">Full-time</span>
+                    <span class="job-tag">Part-time</span>
+                </div>
+
+                <p class="job-info mt-3">
+                    • Pha chế đồ uống<br>
+                    • Phục vụ khách hàng<br>
+                    • Làm việc theo ca
+                </p>
+
+                <button class="btn btn-apply mt-3">Ứng tuyển ngay</button>
+            </div>
+        </div>
+
+        <!-- JOB ITEM -->
+        <div class="col-md-4">
+            <div class="recruit-card">
+                <div class="job-title">Thu ngân</div>
+
+                <div class="job-info mt-2">
+                    <span class="job-tag">Full-time</span>
+                </div>
+
+                <p class="job-info mt-3">
+                    • Thanh toán đơn hàng<br>
+                    • Hỗ trợ khách hàng<br>
+                    • Quản lý hóa đơn
+                </p>
+
+                <button class="btn btn-apply mt-3">Ứng tuyển ngay</button>
+            </div>
+        </div>
+
+        <!-- JOB ITEM -->
+        <div class="col-md-4">
+            <div class="recruit-card">
+                <div class="job-title">Quản lý cửa hàng</div>
+
+                <div class="job-info mt-2">
+                    <span class="job-tag">Full-time</span>
+                </div>
+
+                <p class="job-info mt-3">
+                    • Quản lý nhân sự<br>
+                    • Điều phối hoạt động<br>
+                    • Báo cáo doanh thu
+                </p>
+
+                <button class="btn btn-apply mt-3">Ứng tuyển ngay</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

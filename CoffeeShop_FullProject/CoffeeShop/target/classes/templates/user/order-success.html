@@ -4,23 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Đặt hàng thành công | CoffeeShop</title>
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
 
     <style>
-
         body{
             background:#faf7f1;
             font-family:"Courier New", monospace;
         }
-
         .success-wrapper{
             max-width:780px;
             margin:50px auto;
         }
-
-        /* ===== BOX CHÍNH ===== */
         .success-box{
             background:#ffffff;
             padding:38px;
@@ -29,12 +23,9 @@
             box-shadow:0 8px 25px rgba(0,0,0,.18);
             transition:.25s ease;
         }
-
         .success-box:hover{
             transform:translateY(-3px);
         }
-
-        /* ===== ICON CHECK ===== */
         .check-icon{
             font-size:90px;
             color:#2e7d32;
@@ -42,8 +33,6 @@
             margin-bottom:15px;
             font-weight:bold;
         }
-
-        /* ===== TITLES ===== */
         h2{
             text-align:center;
             font-size:30px;
@@ -51,26 +40,20 @@
             color:#3d4f37;
             letter-spacing:1px;
         }
-
         h5{
             color:#4e3d33;
             font-weight:700;
             margin-top:20px;
         }
-
         p,small{
             color:#3d372f;
         }
-
         hr{
             border-color:#e5d9c7;
         }
-
         .text-danger{
             font-weight:700;
         }
-
-        /* ===== PAYMENT INFO BOX ===== */
         .payment-info{
             background:#fffdf8;
             padding:18px;
@@ -79,14 +62,11 @@
             margin-top:24px;
             box-shadow:0 3px 10px rgba(0,0,0,.08);
         }
-
         .payment-info h5{
             font-size:18px;
             margin-bottom:12px;
             color:#3c2f28;
         }
-
-        /* ===== BUTTON ===== */
         .btn-coffee{
             background:#415738;
             color:#fff;
@@ -96,13 +76,11 @@
             transition:.2s ease;
             letter-spacing:1px;
         }
-
         .btn-coffee:hover{
             background:#2e4129;
             transform:translateY(-2px);
             color:#fff;
         }
-
     </style>
 </head>
 
@@ -111,7 +89,6 @@
 <div th:replace="layout/header :: header"></div>
 
 <div class="container success-wrapper">
-
     <div class="success-box">
 
         <div class="check-icon">✔</div>
@@ -127,7 +104,9 @@
         <h5>Thông tin đơn hàng</h5>
 
         <p><b>Mã đơn:</b> <span th:text="${order.id}"></span></p>
-        <p><b>Ngày đặt:</b> <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span></p>
+        <p><b>Ngày đặt:</b>
+            <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+        </p>
         <p><b>Khách hàng:</b> <span th:text="${order.customerName}"></span></p>
         <p><b>SĐT:</b> <span th:text="${order.phone}"></span></p>
         <p><b>Địa chỉ:</b> <span th:text="${order.address}"></span></p>
@@ -155,9 +134,12 @@
             <hr>
         </div>
 
+        <!-- ===== CHỈ SỬA CHỖ NÀY ===== -->
         <h4 class="text-end text-danger fw-bold">
-            Tổng: <span th:text="${order.total}"></span> đ
+            Tổng:
+            <span th:text="${#numbers.formatDecimal(order.total,0,'COMMA',0,'POINT')}"></span> đ
         </h4>
+        <!-- ========================== -->
 
         <!-- ===== BANK PAYMENT ===== -->
         <div class="payment-info" th:if="${order.paymentMethod=='BANK'}">
